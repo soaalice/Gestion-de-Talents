@@ -102,7 +102,7 @@ class User
     public function getRecruiterApplications($recruiterId)
     {
         $stmt = $this->db->prepare("
-        SELECT c.id AS candidature_id, p.nom AS candidate_name, j.nom AS job_name, c.dateCandidature, c.isTaken AS isTaken
+        SELECT c.id AS candidature_id, p.nom AS candidate_name, j.nom AS job_name, c.dateCandidature, c.isTaken AS isTaken, o.id as idoffre
         FROM Candidature c
         JOIN Personne p ON c.idpersonne = p.id
         JOIN Offre o ON c.idOffre = o.id
@@ -127,7 +127,7 @@ class User
     public function getUserApplications($userId)
     {
         $stmt = $this->db->prepare("
-        SELECT c.id AS candidature_id, j.nom AS job_name, c.dateCandidature
+        SELECT c.id AS candidature_id, j.nom AS job_name, c.dateCandidature, o.id as idoffre
         FROM Candidature c
         JOIN Offre o ON c.idOffre = o.id
         LEFT JOIN Job j ON o.idjob = j.id
@@ -297,5 +297,34 @@ class User
             return 'color: green';  // Si la note est dans les limites, retourner "green"
         }
     }
+
+
+    // détalis
+
+    public function getRequisOffre($idOffre)
+    {
+        $stmt = $this->db->prepare("
+            SELECT r.nom, ro.minimum, ro.maximum
+            FROM requisoffre ro
+            JOIN requis r ON r.id = ro.idrequis
+            WHERE ro.idoffre = ?
+        ");
+        $stmt->execute([$idOffre]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOffreByJobId($idOffre)
+    {
+        $stmt = $this->db->prepare("
+            SELECT j.nom, of.dateOffre, of.salaire
+            FROM offre of
+            JOIN job j ON j.id = of.idjob
+            WHERE of.id = ?
+        ");
+        $stmt->execute([$idOffre]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 
 }   

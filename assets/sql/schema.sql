@@ -1,3 +1,5 @@
+CREATE DATABASE talents;
+\c talents;
 -- Création de la table "TypeChamp"
 CREATE TABLE TypeChamp (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque type de champ
@@ -42,7 +44,7 @@ CREATE TABLE Candidature (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque candidature
     idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne qui fait la candidature
     idOffre INTEGER REFERENCES Offre(id) ON DELETE CASCADE,  -- Offre à laquelle la personne a candidaté
-    dateCandidature DATE NOT NULL  -- Date de la candidature
+    dateCandidature DATE NOT NULL,  -- Date de la candidature
     isTaken boolean default false
 );
 
