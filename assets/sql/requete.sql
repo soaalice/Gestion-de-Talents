@@ -62,3 +62,52 @@ WHERE
     o.id = 1  -- Remplacez par l'ID de l'offre recherchée
     AND pe.id = 1;
 
+SELECT 
+    p.nom AS "Nom de la Personne",
+    r.nom AS "Requis",
+    ro.minimum AS "Minimum Requis",
+    ro.maximum AS "Maximum Requis",
+    pr.valeur AS "Valeur dans le Profil"
+FROM 
+    Candidature c
+JOIN 
+    Personne p ON c.idpersonne = p.id
+JOIN 
+    Offre o ON c.idOffre = o.id
+JOIN 
+    RequisOffre ro ON o.id = ro.idoffre
+JOIN 
+    Requis r ON ro.idrequis = r.id
+LEFT JOIN 
+    Profile pr ON pr.idpersonne = p.id AND pr.idrequis = r.id
+WHERE 
+    c.idpersonne = 3 and c.idoffre = 2
+    AND c.isTaken = FALSE;
+
+
+SELECT 
+    p.nom AS nom_candidat,
+    o.dateOffre AS dateoffre,
+    j.nom AS nom_job,
+    o.salaire AS salaire,
+    r.nom AS nom_requis,
+    ro.minimum AS minimum,
+    ro.maximum AS maximum,
+    pr.valeur AS valeur
+FROM 
+    Candidature c
+JOIN 
+    Personne p ON c.idpersonne = p.id
+JOIN 
+    Offre o ON c.idOffre = o.id
+JOIN 
+    Job j ON o.idjob = j.id  -- Récupère le nom du job depuis la table Job
+JOIN 
+    RequisOffre ro ON o.id = ro.idoffre
+JOIN 
+    Requis r ON ro.idrequis = r.id
+LEFT JOIN 
+    Profile pr ON pr.idpersonne = p.id AND pr.idrequis = r.id
+WHERE 
+    c.idpersonne = 3 and c.idoffre = 2 -- Remplacez <ID_PERSONNE> par l'identifiant de la personne
+    AND c.isTaken = FALSE; -- Filtre sur les candidatures non prises (si nécessaire)

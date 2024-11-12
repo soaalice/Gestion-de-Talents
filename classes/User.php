@@ -313,10 +313,73 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getRequisOffreAvecValeur($idOffre, $idPersonne)
+    {
+        $query = "
+        SELECT 
+            r.nom AS nom, 
+            ro.minimum, 
+            ro.maximum, 
+            p.valeur AS valeur
+        FROM 
+            RequisOffre ro
+        JOIN 
+            Requis r ON ro.idrequis = r.id
+        LEFT JOIN 
+            Profile p ON p.idrequis = r.id AND p.idpersonne = :idpersonne
+        WHERE 
+            ro.idoffre = :idoffre
+    ";
+
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idoffre', $idOffre, PDO::PARAM_INT);
+        $stmt->bindParam(':idpersonne', $idPersonne, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);  // Récupère tous les résultats sous forme de tableau associatif
+    }
+
+    public function getOffreDetails($idOffre, $idPersonne){
+        $query = "
+        SELECT 
+            p.nom AS nom_candidat,
+            o.dateOffre AS dateoffre,
+            j.nom AS nom_job,
+            o.salaire AS salaire,
+            r.nom AS nom_requis,
+            ro.minimum AS minimum,
+            ro.maximum AS maximum,
+            pr.valeur AS valeur
+        FROM 
+            Candidature c
+        JOIN 
+            Personne p ON c.idpersonne = p.id
+        JOIN 
+            Offre o ON c.idOffre = o.id
+        JOIN 
+            Job j ON o.idjob = j.id  -- Récupère le nom du job depuis la table Job
+        JOIN 
+            RequisOffre ro ON o.id = ro.idoffre
+        JOIN 
+            Requis r ON ro.idrequis = r.id
+        LEFT JOIN 
+            Profile pr ON pr.idpersonne = p.id AND pr.idrequis = r.id
+        WHERE 
+            c.idpersonne = :idpersonne and c.idoffre = :idoffre
+            AND c.isTaken = FALSE;
+        ";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idoffre', $idOffre, PDO::PARAM_INT);
+        $stmt->bindParam(':idpersonne', $idPersonne, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getOffreByJobId($idOffre)
     {
         $stmt = $this->db->prepare("
-            SELECT j.nom, of.dateOffre, of.salaire
+            SELECT j.id, j.nom, of.dateOffre, of.salaire
             FROM offre of
             JOIN job j ON j.id = of.idjob
             WHERE of.id = ?
@@ -325,6 +388,15 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getPersonneIdByCandidatureId($idCandidature)
+    {
+        $query = "SELECT idpersonne FROM Candidature WHERE id = :idCandidature";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idCandidature', $idCandidature, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();  // Renvoie l'ID de la personne
+    }
 
 
 }   
