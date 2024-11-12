@@ -22,6 +22,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
             <th>Job Name</th>
             <th>Salary</th>
             <th>Offer Date</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -31,6 +32,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
                 <td><?= htmlspecialchars($offer['job_name']) ?></td>
                 <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
                 <td><?= htmlspecialchars($offer['dateoffre']) ?></td>
+                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button> </a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
@@ -47,7 +49,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
             <th>Status Candidature</th>
             <th>Status Test Écrit</th>
             <th>Status Test Oral</th>
-            <!-- <th>Action</th> -->
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -115,6 +117,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
                     }
                     ?>
                 </td>
+                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['idoffre']) ?>&&idcandidat=<?= htmlspecialchars($application['candidature_id']) ?>"><button>Voir plus</button> </a></td>
 
                 <!-- <td>
                     <?php if (!$application['istaken']): ?>

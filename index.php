@@ -46,6 +46,9 @@ switch ($page) {
     case 'candidateDashboard':
         include 'views/candidateDashboard.php';
         break;
+    case 'detailOffre':
+        include 'views/offreDetails.php';
+        break;
     case 'logout':
         $user->logout();
         header('Location: index.php');
