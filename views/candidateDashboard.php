@@ -22,7 +22,7 @@ $applications = $user->getUserApplications($userId);
             <th>Job Name</th>
             <th>Salary</th>
             <th>Offer Date</th>
-            <th>Apply</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -33,6 +33,8 @@ $applications = $user->getUserApplications($userId);
                 <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
                 <td><?= htmlspecialchars($offer['dateoffre']) ?></td>
                 <td>
+                    <a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button>
+                    </a>
                     <form method="post" action="index.php?page=applicationForm">
                         <input type="hidden" name="offer_id" value="<?= htmlspecialchars($offer['offer_id']) ?>">
                         <input type="submit" value="Apply">
@@ -53,6 +55,7 @@ $applications = $user->getUserApplications($userId);
             <th>Status Candidature</th>
             <th>Status Test Écrit</th>
             <th>Status Test Oral</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -116,6 +119,9 @@ $applications = $user->getUserApplications($userId);
                     }
                     ?>
                 </td>
+                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['idoffre']) ?>&&idcandidat=<?= htmlspecialchars($application['candidature_id']) ?>"><button>Voir
+                            plus</button> </a></td>
+
             </tr>
         <?php endforeach; ?>
     </tbody>
