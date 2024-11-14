@@ -1,0 +1,458 @@
+/**
+* Template Name: NiceAdmin
+* Updated: Aug 30 2023 with Bootstrap v5.3.1
+* Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+* Author: BootstrapMade.com
+* License: https://bootstrapmade.com/license/
+*/
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+:root {
+  scroll-behavior: smooth;
+}
+
+.mt-8 {
+  margin-top: 8rem !important;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  /* CSS */
+  background-color: #DBDBDB;
+  color: #000000;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.rounded-5 {
+  border-radius: 2rem !important  ;
+}
+#box{
+  background-color: #9E9A97;
+}
+a {
+  color: #4154f1;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #717ff5;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Nunito", sans-serif;
+}
+
+/*--------------------------------------------------Personal */
+
+.color-red {
+  color: #E63E37 !important;
+}
+
+.brand-1 {
+  color: white;
+  font-weight: bolder;
+}
+
+.brand-2 {
+  color: #E63D36;
+  font-weight: bolder;
+
+}
+
+.info-parking {
+  font-size: 200%;
+  font-weight: bold;
+  color: #E63D36;
+}
+
+.list-logo {
+  font-size: 50px;
+}
+
+.car-icon {
+  color: #E63D36;
+}
+
+.mytext-info {
+  font-weight: bold;
+  color: #E63D36;
+  font-size: 30px;
+}
+
+.information {
+  position: relative;
+  /* background-color: #959595 ;  */
+  /* border-radius: 50px; */
+  color: rgb(0, 0, 0);
+  padding: 2px;
+}
+
+.information :hover {
+  /* background-color: #000000;  */
+}
+
+.lieu {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+.number-place {
+  border-radius: 50px;
+  background-color: black;
+  color: white;
+  width: 40px;
+  height: 40px;
+  padding: 7px;
+}
+
+
+.element-2 {
+  padding-top: 13px;
+  /* border: 2px solid gainsboro !important; */
+  border-radius: 11px;
+  min-height: 70px;
+  /* padding-top: 13px;   */
+  background-color: #ffffff;
+  box-shadow: 1px 1px 1px 1px;
+  border: none;
+  transition: 0.5s ease-in;
+}
+.element-2:hover{
+  background-color: #e9ecef !important;
+  color: black !important;  
+  box-shadow: 2px 1px 14px 2px #686868;;
+}
+.accordion-button:hover {
+  background-color: #e9ecef;
+}
+.without-after::after{
+  background-image: none !important ;
+}
+.element .element-2:hover {
+  background-color: #414141;
+  color: white;
+}
+
+.info {
+  position: relative;
+  margin-top: 20px;
+}
+
+.Title-resa {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.border-input {
+  border-color: #e9ecef !important;
+}
+
+.bg-input:hover {
+  cursor: pointer;
+  background-color: #e9ecef !important;
+}
+
+.titlePage {
+  z-index: 1;
+  border: 2px solid rgb(95, 95, 95);
+  margin-top: 0px !important;
+  background-color: white !important;
+  right: 1rem;
+  border-radius: 17px;
+}
+
+.quit-but {
+  cursor: pointer;
+  border-radius: 35%;
+}
+
+.critere {
+  border: none !important;
+}
+
+.rech {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+.button-resa {
+  text-align: center;
+  padding: 5%;
+}
+
+.button-resa button {
+
+  /* margin-top: 20px; */
+  font-weight: bold;
+  color: white;
+  /* height:40px; */
+  border-radius: 30px;
+  background-color: #000000;
+  border: none;
+  transition: 0.5s;
+}
+
+.button-resa button:hover {
+  background-color: #E63D36;
+}
+
+.elementinput {
+  color: rgb(0, 0, 0);
+  border-radius: 30px;
+  background-color: rgb(220, 220, 220, 0.8);
+  border: none;
+  height: 50px;
+}
+
+.position-absolute {
+  margin-top: -200px;
+  background-color: #23303b;
+}
+
+.icon-text-inline {
+  align-items: center;
+  /* Centre verticalement */
+}
+
+.icon-text-inline i {
+  margin-right: 8px;
+  /* Espace entre l'icône et le texte */
+}
+
+.backimg {
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-size: 150%;
+  background-image: url(../img/resa.jpg);
+  /* min-height: 100dvh; */
+  /*  margin-top: -10px;  */
+  background-position: center;
+}
+
+.img-represent {
+  border-radius: 20px;
+}
+
+.buttonSearche {
+  color: white;
+  border: 1px solid #E63D36 !important;
+  background-color: #E63D36;
+  /* border-radius: 17px; */
+  /* background-color: #E63D36; */
+  border: none;
+}
+
+.img-filter {
+  width: 40px;
+  filter: invert(1);
+}
+
+.img-filter:hover {
+  filter: invert(0);
+}
+
+.buttonSearche:hover {
+  background-color: #E63D36;
+}
+
+/* css niampi blur */
+.blur-background {
+  transition: 1s ease-in-out;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  z-index: 1;
+  /* Assurez-vous que le flou soit en dessous du contenu de la collapsible */
+}
+
+.hidden {
+  display: none;
+}
+
+.collapse.show+.blur-background {
+  display: block;
+}
+
+.blur-background.hidden {
+  display: none;
+}
+
+/* fin */
+
+
+.place {
+  color: white;
+  font-weight: bold;
+}
+
+.personal-button {
+  margin-top: 10px;
+  border-radius: 40px;
+  transition: 0.3s;
+  background-color: #000000;
+  opacity: 0.7;
+  color: rgb(255, 255, 255);
+  width: 100px;
+  font-weight: bold;
+  border: none;
+  width: 100px;
+  height: 50px;
+}
+
+.personal-button:hover {
+  background-color: #E63D36;
+  color: white;
+}
+
+.headerRecherche {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 6rem !important;
+  background-color: rgba(0, 0, 0);
+  /* Opacité 74% */
+  padding-left: 20px;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.header {
+  transition: all 0.5s;
+  z-index: 997;
+  height: 120px;
+  background-color: rgba(0, 0, 0);
+  /* Opacité 74% */
+  padding-left: 20px;
+  padding: 10px;
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+
+.main-content {
+  padding-top: 120px;
+  /* Correspond à la hauteur du header */
+}
+
+.personalSearch {
+  border-radius: 50px;
+  background-color: #DCDCDC;
+  color: white;
+  border: none;
+}
+
+.reduc {
+  font-weight: 400;
+  color: #E63D36;
+}
+
+.header .toggle-sidebar-btn {
+  font-size: 32px;
+  padding-left: 10px;
+  cursor: pointer;
+  color: #012970;
+}
+
+.header .search-bar {
+  min-width: 360px;
+  padding: 0 20px;
+}
+
+.myTable {
+  width: 100%;
+  border-collapse: collapse;
+  /* Collapse borders into a single border */
+  color: black;
+}
+
+.myTable th, .myTable td {
+  border: 1px solid #ccc;
+  /* Fine border */
+  padding: 8px;
+  /* Padding for cells */
+  text-align: left;
+  /* Align text to the left */
+}
+
+.myTable thead {
+  background-color: #434343;
+  /* Light grey background for headers */
+  color: white;
+}
+
+.col-lieu {
+  background-color: #CCCCCC;
+  /* Light red background */
+}
+
+.col-budget {
+  background-color: #EBDDBD;
+  /* Light green background */
+}
+
+.col-place {
+  background-color: #E8E8E8;
+  /* Light blue background */
+}
+
+.footer {
+  text-align: left;
+  /* Align text to the left */
+  padding: 20px;
+  /* Add some padding for spacing */
+  background-color: #f8f9fa;
+  /* Light background color */
+  border-top: 1px solid #e7e7e7;
+  /* Optional: a light border at the top of the footer */
+}
+
+.footer .copyright {
+  margin-bottom: 40px;
+  /* Add some margin below the copyright section */
+  margin-right: 30px;
+}
+
+.footer .credits {
+  margin-top: 10px;
+  /* Add some margin above the credits section */
+}
+
+.icone{
+  font-size: 2.5rem;
+  margin-right: 20px;
+}
+.blue-icone{
+  
+  color: rgb(34, 122, 245);
+  background-color: rgba(0, 106, 255, 0.159);
+  padding: 15px;
+  border-radius: 100px;
+}
+
+.green-icone{
+  
+  color: rgb(63, 227, 60);
+  background-color: rgba(12, 227, 9, 0.159);
+  padding: 15px;
+  border-radius: 100px;
+}
+
+.red-icone{
+  
+  color: rgb(245, 41, 34);
+  background-color: rgba(255, 13, 0, 0.159);
+  padding: 15px;
+  border-radius: 100px;
+}

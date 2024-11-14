@@ -1,0 +1,18 @@
+footer {
+    background-color: #343a40;
+    color: #ffffff;
+}
+
+footer a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+footer a:hover {
+    color: #adb5bd;
+    text-decoration: underline;
+}
+
+footer .fas, footer .fab {
+    margin-right: 8px;
+}
