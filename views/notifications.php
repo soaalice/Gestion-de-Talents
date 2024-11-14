@@ -44,11 +44,11 @@ $index = 1;
 ?>
 <div class="container mt-5 mb-5">
     <?php foreach ($notification as $notif): ?>
-        <div class="notification ">
+        <div class="notification mb-3">
             <div class="row">
-                <div class="col-12 text-center text-muted">
+                <!-- <div class="col-12 text-center text-muted">
                     <p class="timestamp"><?php echo $notif['dateHeure'] ?></p>
-                </div>
+                </div> -->
             </div>
             <div class="row align-items-center">
                 <div class="col-1">
@@ -60,14 +60,17 @@ $index = 1;
                     </div>
                 </div>
                 <div class="col-11">
-                    <div class="content-box bg-light-green p-4 rounded shadow-sm">
+                    <div class="content-box bg-light-green p-4 pt-2 pb-2 rounded shadow-sm">
                         <p><?php echo $notif['texteNotif'] ?></p>
+                        <div class="col-12 text-start text-muted my-2">
+                            <p class="timestamp"><?php echo $notif['dateHeure'] ?></p>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row text-end ">
+            <!-- <div class="row text-end ">
                 <p class="p-2">Lue</p>
-            </div>
+            </div> -->
         </div>
         <?php $index++; ?>
     <?php endforeach; ?>

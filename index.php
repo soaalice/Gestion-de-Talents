@@ -58,6 +58,9 @@ switch ($page) {
     case 'notifications':
         include 'views/notifications.php';
         break;
+    case 'chat':
+        include 'views/chatbot.php';
+        break;
     case 'logout':
         $user->logout();
         header('Location: index.php');
