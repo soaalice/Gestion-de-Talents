@@ -5,9 +5,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $phone = $_POST['phone'] ?? null;
     $dob = $_POST['dob'];
-    $roleId = $_POST['role']; // Récupération de l'ID du rôle
 
-    if ($user->register($name, $email, $password, $phone, $dob, $roleId)) {
+    if ($user->register($name, $email, $password, $phone, $dob)) {
         $user->login($email, $password); // Connexion automatique après l'inscription
         header('Location: index.php');
         exit;
@@ -38,13 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Date of Birth:</label><br>
     <input type="date" name="dob" required><br><br>
-
-    <label>Role:</label><br>
-    <select name="role" required>
-        <?php foreach ($roles as $role): ?>
-            <option value="<?= htmlspecialchars($role['id']) ?>"><?= htmlspecialchars($role['nom']) ?></option>
-        <?php endforeach; ?>
-    </select><br><br>
+    
 
     <input type="submit" value="Register">
 </form>

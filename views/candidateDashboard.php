@@ -1,6 +1,6 @@
 <?php
 // Vérifier si l'utilisateur est authentifié et est un postulant
-if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'postulant') {
+if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'client') {
     header('Location: index.php?page=login');
     exit;
 }
@@ -8,7 +8,7 @@ if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'postulant') {
 $userId = $_SESSION['user_id']; // ID du postulant connecté
 
 // Récupérer les offres disponibles
-$offers = $user->getAvailableOffers();
+$offers = $user->getAvailableOffers($_SESSION['user_cv']);
 
 // Récupérer les candidatures du postulant
 $applications = $user->getUserApplications($userId);
@@ -20,7 +20,6 @@ $applications = $user->getUserApplications($userId);
         <tr>
             <th>Offer ID</th>
             <th>Job Name</th>
-            <th>Salary</th>
             <th>Offer Date</th>
             <th>Action</th>
         </tr>
@@ -30,15 +29,12 @@ $applications = $user->getUserApplications($userId);
             <tr>
                 <td><?= htmlspecialchars($offer['offer_id']) ?></td>
                 <td><?= htmlspecialchars($offer['job_name']) ?></td>
-                <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
-                <td><?= htmlspecialchars($offer['dateoffre']) ?></td>
+                <td><?= htmlspecialchars($offer['datecreation']) ?></td>
                 <td>
-                    <a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button>
+                    <a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button>
                     </a>
-                    <form method="post" action="index.php?page=applicationForm">
-                        <input type="hidden" name="offer_id" value="<?= htmlspecialchars($offer['offer_id']) ?>">
-                        <input type="submit" value="Apply">
-                    </form>
+                        <a href="index.php?page=applicationForm&id=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Apply </button></a>
+                    
                 </td>
             </tr>
         <?php endforeach; ?>

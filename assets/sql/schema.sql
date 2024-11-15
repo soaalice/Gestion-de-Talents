@@ -1,11 +1,3 @@
-CREATE DATABASE talents;
-\c talents;
--- Création de la table "TypeChamp"
-CREATE TABLE TypeChamp (
-    id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque type de champ
-    nom VARCHAR(255) NOT NULL   -- Nom du type de champ
-);
-
 -- Création de la table "Role"
 CREATE TABLE Role (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque rôle
@@ -34,56 +26,57 @@ CREATE TABLE Offre (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque offre
     idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne qui propose l'offre
     idjob INTEGER REFERENCES Job(id) ON DELETE SET NULL,  -- Job associé à l'offre
-    dateOffre DATE NOT NULL,    -- Date de l'offre
-    salaire NUMERIC(10, 2) NOT NULL,  -- Salaire proposé
-    isTaken boolean default false
+    dateCreation DATE NOT NULL,    -- Date de l'offre
+    dateFin DATE NOT NULL,
+    exigence VARCHAR(1000)        -- Exigence pour l'offre
+);
+
+-- Création de la table "cv"
+CREATE TABLE cv (
+    id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque CV
+    idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne à laquelle le CV appartient
+    competence VARCHAR(1000) NOT NULL,   -- Compétences de la personne
+    experience VARCHAR(1000) NOT NULL,   -- Expériences de la personne
+    education VARCHAR(1000) NOT NULL     -- Formation de la personne
 );
 
 -- Création de la table "Candidature"
 CREATE TABLE Candidature (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque candidature
-    idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne qui fait la candidature
+    idcv INTEGER REFERENCES cv(id) ON DELETE CASCADE,  -- CV de la personne qui postule
     idOffre INTEGER REFERENCES Offre(id) ON DELETE CASCADE,  -- Offre à laquelle la personne a candidaté
-    dateCandidature DATE NOT NULL,  -- Date de la candidature
-    isTaken boolean default false
+    datePostule DATE NOT NULL,  -- Date de la candidature
+    etat BOOLEAN DEFAULT FALSE  -- Statut de la candidature
 );
 
--- Création de la table "Requis"
-CREATE TABLE Requis (
-    id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque exigence
-    nom VARCHAR(255) NOT NULL,  -- Nom de l'exigence
-    idtypechamp INTEGER REFERENCES TypeChamp(id) ON DELETE SET NULL  -- Type de champ de l'exigence
-);
-
--- Création de la table "RequisOffre"
-CREATE TABLE RequisOffre (
-    id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque exigence liée à une offre
-    idoffre INTEGER REFERENCES Offre(id) ON DELETE CASCADE,  -- Offre concernée
-    idrequis INTEGER REFERENCES Requis(id) ON DELETE CASCADE,  -- Exigence liée à l'offre
-    minimum VARCHAR(255),       -- Valeur minimale exigée en texte
-    maximum VARCHAR(255)        -- Valeur maximale exigée en texte
-);
-
--- Création de la table "Profile"
-CREATE TABLE Profile (
-    id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque profil
-    idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne concernée par le profil
-    idrequis INTEGER REFERENCES Requis(id) ON DELETE CASCADE,  -- Exigence associée
-    valeur VARCHAR(255) NOT NULL  -- Valeur renseignée par la personne dans son profil
-);
-ALTER TABLE Profile
-ADD CONSTRAINT unique_profile UNIQUE (idpersonne, idrequis);
-
-CREATE TABLE type_evaluation(
+-- Création de la table "type_evaluation"
+CREATE TABLE type_evaluation (
     id SERIAL PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    maximum NUMERIC(4,2) NOT NULL default 0,
-    minimum NUMERIC(4,2) NOT NULL default 0
+    maximum NUMERIC(4,2) NOT NULL DEFAULT 0,
+    minimum NUMERIC(4,2) NOT NULL DEFAULT 0
 );
 
+-- Création de la table "Evaluation"
 CREATE TABLE Evaluation (
     id SERIAL PRIMARY KEY,
-    note NUMERIC(4,2) not NULL,
     idcandidature INTEGER REFERENCES Candidature(id) ON DELETE CASCADE,
-    idtype INTEGER REFERENCES type_evaluation(id) ON DELETE CASCADE
+    idtypeEvaluation INTEGER REFERENCES type_evaluation(id) ON DELETE CASCADE,
+    note NUMERIC(4,2) NOT NULL,
+    dateEvaluation DATE NOT NULL  -- Date de l'évaluation
+);
+
+-- Création de la table "embauche"
+CREATE TABLE embauche (
+    id SERIAL PRIMARY KEY,
+    dateEmbauche DATE NOT NULL,  -- Date de l'embauche
+    idcandidature INTEGER REFERENCES Candidature(id) ON DELETE CASCADE
+);
+
+-- Création de la table "notifications"
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    textNotif VARCHAR(6000),     -- Texte de la notification
+    etat BOOLEAN NOT NULL,       -- Statut de la notification
+    dateheure TIMESTAMP NOT NULL -- Date et heure de la notification
 );

@@ -1,6 +1,6 @@
 <?php
 // Vérifier si l'utilisateur est authentifié et est un recruteur
-if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'recruteur') {
+if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
     header('Location: index.php?page=login');
     exit;
 }
@@ -20,7 +20,6 @@ $applications = $user->getRecruiterApplications($recruiterId);
         <tr>
             <th>Offer ID</th>
             <th>Job Name</th>
-            <th>Salary</th>
             <th>Offer Date</th>
             <th>Action</th>
         </tr>
@@ -30,9 +29,8 @@ $applications = $user->getRecruiterApplications($recruiterId);
             <tr>
                 <td><?= htmlspecialchars($offer['offer_id']) ?></td>
                 <td><?= htmlspecialchars($offer['job_name']) ?></td>
-                <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
-                <td><?= htmlspecialchars($offer['dateoffre']) ?></td>
-                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button> </a></td>
+                <td><?= htmlspecialchars($offer['datecreation']) ?></td>
+                <td><a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button> </a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
