@@ -21,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: index.php?page=recruiterDashboard');
     exit;
 }
+include 'header.php';
 ?>
 
 <div class="container mt-5">

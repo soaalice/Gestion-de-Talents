@@ -1,6 +1,3 @@
-<?php
-header('Content-Type: text/html; charset=UTF-8');
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,7 +9,8 @@ header('Content-Type: text/html; charset=UTF-8');
     <link rel="stylesheet" href="./assets/css/all.css">
     <link rel="stylesheet" href="<?php echo $perso ?>">
     <style>
-         .bulle {
+        /* Bulle flottante */
+        .bulle {
             position: fixed;
             bottom: 30px;
             right: 30px;
@@ -33,7 +31,7 @@ header('Content-Type: text/html; charset=UTF-8');
             transform: scale(1.1);
         }
 
-        /* Chat Container */
+        /* Conteneur du chat */
         .chat-container {
             position: fixed;
             bottom: 100px;
@@ -130,6 +128,60 @@ header('Content-Type: text/html; charset=UTF-8');
             border-bottom-left-radius: 0px;
         }
 
+        /* Menu Options à côté du chat */
+        /* Menu Options à côté du chat */
+        .menu-options {
+            position: fixed;
+            bottom: 100px;
+            right: 340px;
+            /* Positionner à gauche du chat */
+            width: 200px;
+            height: 209px;
+            max-height: 209px;
+            overflow-y: scroll;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 15;
+            padding: 10px;
+            transform: scale(0);
+            /* Par défaut, le menu est réduit */
+            transform-origin: bottom right;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            /* Transition ajoutée pour l'animation */
+        }
+
+        .menu-options.open {
+            display: block;
+            transform: scale(1);
+            /* Agrandir le menu lors de l'ouverture */
+            opacity: 1;
+            /* Ajouter une transition de l'opacité pour améliorer l'animation */
+        }
+
+
+        .menu-options ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-options ul li {
+            margin: 10px 0;
+        }
+
+        .menu-options ul li a {
+            text-decoration: none;
+            color: #4a90e2;
+            font-weight: bold;
+        }
+
+        /* Hover sur les liens du menu */
+        .menu-options ul li a:hover {
+            color: #357ab7;
+        }
+
         /* Animation des messages */
         @keyframes appear {
             0% {
@@ -145,64 +197,6 @@ header('Content-Type: text/html; charset=UTF-8');
 
         .chat-messages p {
             animation: appear 0.3s ease-out;
-        }
-
-        /* Hover sur les messages */
-        .chat-messages .user-message:hover {
-            background-color: #357ab7;
-            transform: scale(1.05);
-        }
-
-        .chat-messages .bot-message:hover {
-            background-color: #dcdcdc;
-            transform: scale(1.05);
-        }
-
-        /* Extension de Chat */
-        .contenue-2 {
-            position: fixed;
-            bottom: 100px;
-            right: 30px;
-            width: 300px;
-            max-height: 400px;
-            background-color: #f1f1f1;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            z-index: 9;
-            transform: scale(0);
-            animation: coulisseSort 0.5s ease-in-out forwards;
-        }
-
-        .contenue-2.open {
-            transform: scale(1);
-            display: flex;
-            animation: coulisse 0.5s ease-in-out forwards;
-        }
-
-        @keyframes coulisseSort {
-            0% {
-                /* right: 30px; */
-                transform: translateX(-300px);
-            }
-
-            100% {
-                /* right: 330px; */
-                transform: translateX(0);
-                display: none;
-            }
-        }
-        @keyframes coulisse {
-            0% {
-                /* right: 30px; */
-                transform: translateX(0);
-            }
-
-            100% {
-                /* right: 330px; */
-                transform: translateX(-300px);
-            }
         }
     </style>
     <title>Document</title>
@@ -227,7 +221,7 @@ header('Content-Type: text/html; charset=UTF-8');
                     <?php if (isset($role) || !empty($role)) { ?>
                         <li class="nav-item">
                             <a class="nav-link active" href="index.php" style="color: #d2f1d4;">Role : <strong
-                                    style='color: #d2f1d4;'><?php echo $role ?></strong></a>
+                                    style='color: #ffffff;'><?php echo $role ?></strong></a>
                         </li>
                     <?php } ?>
 
@@ -258,7 +252,6 @@ header('Content-Type: text/html; charset=UTF-8');
     <div class="chat-container" id="chatContainer">
         <div class="chat-header">
             Assistant Virtuel
-            <span class="more-options" onclick="toggleExtension()">&#8230;</span>
         </div>
         <div class="chat-messages" id="chatMessages">
             <p>Bonjour ! Comment puis-je vous aider ?</p>
@@ -269,52 +262,57 @@ header('Content-Type: text/html; charset=UTF-8');
         </div>
     </div>
 
-    <!-- Extension de Chat -->
-    <div class="contenue-2" id="contenue2">
-        <div style="padding: 15px; font-weight: bold; color: #4a90e2;">Extension</div>
-        <div style="padding: 10px;">Contenu supplémentaire ou options ici...</div>
+    <!-- Menu Options à côté du chat -->
+    <div class="menu-options" id="menuOptions">
+        <div class="chat-header">
+            Option de chat
+        </div>
+        <ul>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 1</a></li>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 1</a></li>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 1</a></li>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 1</a></li>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 2</a></li>
+            <li><a href="#"><i class="fas fa-arrow-right mx-1"></i> Option 3</a></li>
+        </ul>
     </div>
 
     <script>
         function toggleChat() {
             const chatContainer = document.getElementById('chatContainer');
-            const extensionContainer = document.getElementById('contenue2');
+            const menuOptions = document.getElementById('menuOptions');
             chatContainer.classList.toggle('open');
-            if(extensionContainer.classList.contains('open')){
-                extensionContainer.classList.remove('open');    
+            if (chatContainer.classList.contains('open')) {
+                menuOptions.classList.add('open'); // Afficher le menu à côté
+            } else {
+                menuOptions.classList.remove('open'); // Cacher le menu
             }
-        }
-
-        function toggleExtension() {
-            const extensionContainer = document.getElementById('contenue2');
-            extensionContainer.classList.toggle('open');
         }
 
         function sendMessage() {
-            const chatMessages = document.getElementById('chatMessages');
-            const userMessageInput = document.getElementById('userMessage');
-            const messageText = userMessageInput.value.trim();
-
+            const messageInput = document.getElementById('userMessage');
+            const messageText = messageInput.value.trim();
             if (messageText) {
-                // Créer le message de l'utilisateur
-                const userMessage = document.createElement('p');
-                userMessage.classList.add('user-message');
-                userMessage.textContent = messageText;
-                chatMessages.appendChild(userMessage);
-
-                // Effacer l'input
-                userMessageInput.value = '';
-
-                // Répondre avec un message du bot
-                setTimeout(() => {
-                    const botMessage = document.createElement('p');
-                    botMessage.classList.add('bot-message');
-                    botMessage.textContent = "Merci pour votre message ! Je vais y réfléchir.";
-                    chatMessages.appendChild(botMessage);
-
-                    // Faire défiler les messages vers le bas
-                    chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 500);
+                const messageElement = document.createElement('p');
+                messageElement.classList.add('user-message');
+                messageElement.textContent = messageText;
+                document.getElementById('chatMessages').appendChild(messageElement);
+                messageInput.value = '';
+                scrollToBottom();
+                botResponse();
             }
+        }
+
+        function botResponse() {
+            const botMessage = document.createElement('p');
+            botMessage.classList.add('bot-message');
+            botMessage.textContent = "Merci pour votre message, je vais y répondre.";
+            document.getElementById('chatMessages').appendChild(botMessage);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            const messages = document.getElementById('chatMessages');
+            messages.scrollTop = messages.scrollHeight;
         }
     </script>

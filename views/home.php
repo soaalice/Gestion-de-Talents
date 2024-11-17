@@ -1,4 +1,5 @@
 <?php
+include 'header.php';
 if ($user->isAuthentified()) {
     $role = $user->getRole();
     echo "<div class='container mt-5 mb-5'>";

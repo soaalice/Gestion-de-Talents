@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Récupérer les rôles à afficher dans le formulaire
+include 'header.php';
 $roles = $user->getRoles();
 ?>
 <div class="container p-5" style="background-color: #eaf4f0; padding-top: 80px;"> <!-- Fond léger avec padding-top pour espacer du nav -->

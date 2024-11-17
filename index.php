@@ -18,7 +18,7 @@ switch ($page) {
         break;
 }
 // Inclusion du header
-include 'header.php';
+// include 'header.php';
 
 // Inclusion de la vue correspondante
 switch ($page) {

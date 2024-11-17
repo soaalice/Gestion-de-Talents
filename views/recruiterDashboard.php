@@ -12,6 +12,8 @@ $offers = $user->getRecruiterOffers($recruiterId);
 
 // Récupérer les candidatures pour ces offres
 $applications = $user->getRecruiterApplications($recruiterId);
+
+include 'header.php';
 ?>
 
 <div class="container mt-5 mb-5 pb-5">
@@ -22,7 +24,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
         </div>
 
         <!-- Tableau des offres -->
-        <table class="table table-bordered shadow-lg" style="background-color: #e6f4e6;">
+        <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
             <thead style="background-color: #a8d5a2; color: #2b7a2b;">
                 <tr>
                     <th>Offer ID</th>
@@ -34,7 +36,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
             </thead>
             <tbody>
                 <?php foreach ($offers as $offer): ?>
-                    <tr style="background-color: #f1f8f3;">
+                    <tr style="background-color: #ffffff;">
                         <td><?= htmlspecialchars($offer['offer_id']) ?></td>
                         <td><?= htmlspecialchars($offer['job_name']) ?></td>
                         <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
@@ -54,7 +56,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
         </div>
 
         <!-- Tableau des candidatures -->
-        <table class="table table-bordered shadow-lg" style="background-color: #e6f4e6;">
+        <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
             <thead style="background-color: #a8d5a2; color: #2b7a2b;">
                 <tr>
                     <th>Application ID</th>
@@ -73,7 +75,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
                     $writtenTestStatus = $user->getWrittenTestStatus($application['candidature_id']);
                     $oralTestStatus = $user->getOralTestStatus($application['candidature_id']);
                     ?>
-                    <tr style="background-color: #f1f8f3;">
+                    <tr style="background-color: #ffffff;">
                         <td><?= htmlspecialchars($application['candidature_id']) ?></td>
                         <td><?= htmlspecialchars($application['candidate_name']) ?></td>
                         <td><?= htmlspecialchars($application['job_name']) ?></td>

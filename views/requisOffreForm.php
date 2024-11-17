@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='alert alert-danger text-center mt-4'>Failed to add requisite.</div>";
     }
 }
+include 'header.php';
 ?>
 
 <div class="container mt-5">

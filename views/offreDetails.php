@@ -1,12 +1,12 @@
-<?php 
-    $recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
+<?php
+$recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
 
-    $idOffre = $_GET['offreid'];
+$idOffre = $_GET['offreid'];
 
-    $job = $user->getOffreByJobId($idOffre);
+$job = $user->getOffreByJobId($idOffre);
 
-    $jobDetails = $user->getRequisOffre($idOffre);
-
+$jobDetails = $user->getRequisOffre($idOffre);
+include 'header.php';
 ?>
 
 <div class="job-offer">
@@ -18,8 +18,8 @@
 
 <div class="criteria">
     <h2>Critères de sélection</h2>
-    <table>
-        <thead>
+    <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
+        <thead style="background-color: #a8d5a2; color: #2b7a2b;">
             <tr>
                 <th>Critère</th>
                 <th>Minimum</th>
@@ -36,5 +36,147 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-    <a href="index.php?page=recruiterDashboard">retour</a>
+    <a href="index.php?page=recruiterDashboard" class="btn btn-success">Retour</a>
 </div>
+<style>
+    .table-bordered {
+        border: 1px solid #a8d5a2;
+    }
+
+    /* Design naturel avec des couleurs apaisantes et une mise en page fluide */
+    body {
+        background-color: #f5f5f5;
+        /* Fond doux et naturel */
+        font-family: 'Arial', sans-serif;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        width: 80%;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    /* Style de l'offre d'emploi */
+    .job-offer {
+        background-color: #ffffff;
+        padding: 30px;
+        /* border-radius: 8px; */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .job-offer h2 {
+        font-size: 24px;
+        color: #107c41;
+        /* Vert naturel */
+        margin-bottom: 20px;
+    }
+
+    .job-offer p {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+
+    .job-offer strong {
+        color: #107c41;
+    }
+
+    /* Style des critères */
+    .criteria {
+        /* background-color: #ffffff; */
+        padding: 30px;
+        border-radius: 8px;
+        /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); */
+    }
+
+    .criteria h2 {
+        font-size: 24px;
+        color: #107c41;
+        /* Vert naturel */
+        margin-bottom: 20px;
+    }
+
+    /* Table des critères */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th,
+    td {
+        padding: 15px;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    th {
+        background-color: #eaf4f0;
+        /* Gris clair */
+        color: #107c41;
+        font-weight: bold;
+    }
+
+    td {
+        background-color: #f9f9f9;
+        color: #555;
+    }
+
+    tr:nth-child(even) td {
+        background-color: #f1f1f1;
+    }
+
+    /* Lien retour */
+    .back-link {
+        display: inline-block;
+        padding: 12px 25px;
+        background-color: #107c41;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    
+
+    /* Footer Style */
+    .footer {
+        background-color: #107c41;
+        color: #fff;
+        padding: 15px 0;
+        text-align: center;
+        margin-top: 50px;
+        font-size: 14px;
+    }
+
+    .footer p {
+        margin: 0;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .container {
+            width: 90%;
+        }
+
+        .job-offer,
+        .criteria {
+            padding: 20px;
+        }
+
+        table th,
+        table td {
+            font-size: 14px;
+            padding: 10px;
+        }
+
+        .back-link {
+            padding: 10px 20px;
+        }
+    }
+</style>

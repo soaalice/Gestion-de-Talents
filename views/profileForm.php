@@ -8,6 +8,7 @@ if (isset($_POST['offer_id'])) {
     $offerId = $_POST['offer_id'];
     $requis = $user->getRequisForOffer($offerId); // Récupérer les requis pour cette offre
 }
+include 'header.php';
 
 // Gestion du formulaire après soumission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['profile_data'])) {
@@ -19,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['profile_data'])) {
         $user->createProfile($_SESSION['user_id'], $requisId, $value); // Ajouter dans la table Profile
     }
 
-    echo "<div class='alert alert-success text-center mt-4'>Profile updated successfully!</div>";
+    echo "<div class='alert alert-success text-center mt-4' style='background-color:#ffffff'>Profile updated successfully!</div>";
 }
 ?>
 
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['profile_data'])) {
             </div>
 
             <div class="text-center">
-                <input type="submit" value="Submit Profile" class="btn btn-outline-primary btn-lg highlight-btn">
+                <input type="submit" value="Submit Profile" class="btn btn-success btn-lg highlight-btn">
             </div>
         <?php else: ?>
             <p>No requirements found for this offer.</p>
@@ -67,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['profile_data'])) {
     }
     .highlight-btn:hover {
         transform: scale(1.05);
-        box-shadow: 0 0 15px rgba(56, 189, 94, 0.5); /* Ombre verte légère */
-        border-color: #3a6a40; /* Bordure légèrement plus sombre */
+        /* box-shadow: 0 0 15px rgba(56, 189, 94, 0.5); Ombre verte légère */
+        /* border-color: #3a6a40; Bordure légèrement plus sombre */
         /* background-color: #f1f8f3; Fond léger au survol */
     }
 </style>

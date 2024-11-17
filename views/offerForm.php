@@ -14,6 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='alert alert-danger text-center mt-4'>Failed to create offer. Please try again.</div>";
     }
 }
+include 'header.php';
 ?>
 
 <div class="container mt-5 mb-5 pb-5">

@@ -4,7 +4,7 @@ if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'postulant') {
     header('Location: index.php?page=login');
     exit;
 }
-
+include "header.php";
 $userId = $_SESSION['user_id']; // ID du postulant connecté
 
 // Récupérer les offres disponibles
