@@ -1,0 +1,29 @@
+body {
+    background-image: url('./image/R.jpg');
+    background-size: cover; /* Assure que l'image couvre toute la surface du body */
+    background-repeat: no-repeat; /* Évite la répétition de l'image */
+    background-position: center; /* Centre l'image */
+    height: 1000px; /* Hauteur de l'élément body */
+}
+
+button:hover{
+    background-color: #E63D36 !important;
+    border: none;
+}
+
+
+#span{
+    background-color:#9E9A97 ; 
+    border-color: black;
+    color: black;
+}
+#box{
+
+    background-color:#9E9A97 ; 
+
+}
+
+#input{
+    background-color:#9E9A97 ;
+    border-color: black;
+}

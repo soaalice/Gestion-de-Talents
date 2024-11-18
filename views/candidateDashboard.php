@@ -4,7 +4,7 @@ if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'client') {
     header('Location: index.php?page=login');
     exit;
 }
-
+include "header.php";
 $userId = $_SESSION['user_id']; // ID du postulant connecté
 
 // Récupérer les offres disponibles
@@ -13,10 +13,12 @@ $offers = $user->getAvailableOffers($_SESSION['user_cv']);
 // Récupérer les candidatures du postulant
 $infos = $user->getCvDashboardInfoPerson($userId);
 ?>
+<div class="container">
+    <div class="mt-5 mb-5">
 
-<h2>Available Job Offers</h2>
-<table border="1">
-    <thead>
+<h2 class = "text-success"> Available Job Offers</h2>
+<table class="table table-bordered table-striped table-hover">
+    <thead class = "bg-success text-white">
         <tr>
             <th>Offer ID</th>
             <th>Job Name</th>
@@ -40,10 +42,12 @@ $infos = $user->getCvDashboardInfoPerson($userId);
         <?php endforeach; ?>
     </tbody>
 </table>
-
-<h2>My Applications</h2>
-<table border="1">
-    <thead>
+</div>
+<div class = "mb-5 mt-5">
+  
+<h2 class = "text-success"> My Applications</h2>
+<table class="table table-bordered table-striped table-hover">
+    <thead class = "bg-success text-white">
         <tr>
             <th>ID Candidature</th>
             <th>Nom de la Personne</th>
@@ -98,8 +102,6 @@ $infos = $user->getCvDashboardInfoPerson($userId);
                     }
                     ?>
                 </td>
-
-                <!-- Statut Test Oral -->
                 <td>
                     <?php
                     if ($application['moyenne_notes'] < 2) {
@@ -126,3 +128,4 @@ $infos = $user->getCvDashboardInfoPerson($userId);
         <?php endforeach; ?>
     </tbody>
 </table>
+

@@ -84,12 +84,10 @@ CREATE TABLE embauche (
     idcandidature INTEGER REFERENCES Candidature(id) ON DELETE CASCADE
 );
 
--- Création de la table "notifications"
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
-    textNotif TEXT,     -- Texte de la notification
-    etat BOOLEAN NOT NULL,       -- Statut de la notification
-    dateheure TIMESTAMP NOT NULL -- Date et heure de la notification
+    idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,
+    textenotif TEXT NOT NULL,
+    etat INTEGER NOT NULL default 0,
+    dateheure_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
 );
-
-

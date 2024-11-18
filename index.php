@@ -11,8 +11,14 @@ $user = new User($db);
 // Gestion des routes
 $page = isset($_GET['page']) ? $_GET['page'] : 'home';
 
+$perso = "";
+switch ($page) {
+    case "notifications":
+        $perso = "./assets/css/perso.css";
+        break;
+}
 // Inclusion du header
-include 'header.php';
+// include 'header.php';
 
 // Inclusion de la vue correspondante
 switch ($page) {
@@ -55,6 +61,15 @@ switch ($page) {
     case 'detailOffre':
         include 'views/detailsOffre.php';
         break;
+    case 'notifications':
+        include 'views/notifications.php';
+        break;
+    case 'chat':
+        include 'views/chatbot.php';
+        break;
+    case 'quest':
+        include 'views/quest.php';
+        break;
     case 'logout':
         $user->logout();
         header('Location: index.php');
@@ -63,3 +78,4 @@ switch ($page) {
         include 'views/home.php';
         break;
 }
+include "footer.php";

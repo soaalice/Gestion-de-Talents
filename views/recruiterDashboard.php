@@ -1,4 +1,5 @@
 <?php
+include 'header.php';
 // Vérifier si l'utilisateur est authentifié et est un recruteur
 if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
     header('Location: index.php?page=login');
@@ -11,12 +12,18 @@ $recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
 $offers = $user->getRecruiterOffers($recruiterId);
 
 // Récupérer les candidatures pour ces offres
+
 $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
 ?>
+<div class="container mb-5 mt-5 pb-5">
+  <div>
+     <div class="m-3 mb-4">
+            <h2 class="text-center" style="color: #3a6a40;">My Job Offers</h2>
+        </div>
 
-<h2>My Job Offers</h2>
-<table border="1">
-    <thead>
+        <!-- Tableau des offres -->
+        <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
+            <thead style="background-color: #a8d5a2; color: #2b7a2b;">
         <tr>
             <th>Offer ID</th>
             <th>Job Name</th>
@@ -35,10 +42,18 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
         <?php endforeach; ?>
     </tbody>
 </table>
+    </div>
+  
 
-<h2>Applications for My Offers</h2>
-<table border="1">
-    <thead>
+<div class="mt-5">
+
+        <div class="m-3 mb-4">
+            <h2 class="text-center" style="color: #3a6a40;">Applications for My Offers</h2>
+        </div>
+
+        <!-- Tableau des candidatures -->
+        <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
+            <thead style="background-color: #a8d5a2; color: #2b7a2b;">
         <tr>
             <th>ID Candidature</th>
             <th>Nom de la Personne</th>
@@ -122,3 +137,37 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
         <?php endforeach; ?>
     </tbody>
 </table>
+  </div>
+</div>
+<!-- CSS personnalisé pour le thème nature et écologie -->
+<style>
+    .table-bordered {
+        border: 1px solid #a8d5a2;
+    }
+
+    .table thead {
+        background-color: #a8d5a2;
+        color: #2b7a2b;
+    }
+
+    .btn-outline-success {
+        color: #3a6a40;
+        border-color: #3a6a40;
+        transition: all 0.3s ease;
+    }
+
+    .btn-outline-success:hover {
+        background-color: #3a6a40;
+        color: #fff;
+    }
+
+    .btn-outline-primary {
+        color: #2b7a2b;
+        border-color: #2b7a2b;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #2b7a2b;
+        color: #fff;
+    }
+</style>

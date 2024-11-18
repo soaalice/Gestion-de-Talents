@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: index.php?page=recruiterDashboard');
     exit;
 }
+include 'header.php';
 ?>
 
 <h2>Évaluation du Test Oral</h2>
