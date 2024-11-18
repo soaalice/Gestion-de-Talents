@@ -87,3 +87,11 @@ CREATE TABLE Evaluation (
     idcandidature INTEGER REFERENCES Candidature(id) ON DELETE CASCADE,
     idtype INTEGER REFERENCES type_evaluation(id) ON DELETE CASCADE
 );
+
+CREATE TABLE notifications (
+    id SERIAL PRIMARY KEY,
+    idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,
+    textenotif TEXT NOT NULL,
+    etat INTEGER NOT NULL default 0,
+    dateheure_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
+);

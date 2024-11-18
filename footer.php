@@ -6,9 +6,9 @@
                 <h5>Contact</h5>
                 <ul class="list-unstyled">
                     
-                    <li><i class="fas fa-map-marker-alt"></i> 123 Rue de l'Exemple, Paris, France</li>
-                    <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
-                    <li><i class="fas fa-envelope"></i> contact@example.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> IT University, Andoharanofotsy</li>
+                    <li><i class="fas fa-phone"></i> +261 34 16 100 25</li>
+                    <li><i class="fas fa-envelope"></i> amboararampanana@gmail.com</li>
                 </ul>
             </div>
             
@@ -36,7 +36,7 @@
         </div>
         <div class="row mt-4">
             <div class="col-12 text-center">
-                <p class="mb-0">&copy; 2024 Exemple Entreprise. Tous droits réservés.</p>
+                <p class="mb-0">&copy; 2024 Talent Managment System. Tous droits réservés.</p>
             </div>
         </div>
     </div>
