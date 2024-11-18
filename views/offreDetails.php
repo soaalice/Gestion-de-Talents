@@ -1,5 +1,6 @@
+<?php
+    include('header.php');
 
-<?php 
     $recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
     $idOffre = $_GET['offreid'];
     $job = $user->getOffreByJobId($idOffre);

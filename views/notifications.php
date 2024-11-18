@@ -3,7 +3,9 @@ include 'header.php';
 $notification = $user->getNotifs($_SESSION['user_id']);
 ?>
 <div class="container mt-5 mb-5">
-    <?php foreach ($notification as $notif): ?>
+    <?php 
+        if (count($notification) > 0) {
+        foreach ($notification as $notif): ?>
         <div class="notification mb-3">
             <div class="row">
             </div>
@@ -26,6 +28,12 @@ $notification = $user->getNotifs($_SESSION['user_id']);
         $user -> updateNotifs($notif['id']);
     }
     endforeach; 
+    } else {
     ?>
 
+    <div>
+        Vous n'avez pas encore de notifications.
+    </div>
+
+    <?php } ?>
 </div>

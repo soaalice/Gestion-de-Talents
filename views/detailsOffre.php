@@ -1,4 +1,6 @@
 <?php
+
+include('header.php');
 // Récupérer les offres disponibles
 $id = $_GET['id'];
 $offers = $user->getOffreById($id);

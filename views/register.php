@@ -5,7 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $phone = $_POST['phone'] ?? null;
     $dob = $_POST['dob'];
-    $idrole = $_POST['roles'];
+    $idrole = $_POST['role'];
 
     if ($user->register2($name, $email, $password, $phone, $dob,$idrole)) {
         $user->login($email, $password); // Connexion automatique après l'inscription
@@ -19,11 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  // Récupérer les rôles à afficher dans le formulaire
  $roles = $user->getRoles();
 
-?>
-
-// Récupérer les rôles à afficher dans le formulaire
 include 'header.php';
-$roles = $user->getRoles();
 ?>
 <div class="container p-5" style="background-color: #eaf4f0; padding-top: 80px;"> <!-- Fond léger avec padding-top pour espacer du nav -->
     <div class="d-flex justify-content-center align-items-start" style="min-height: auto;">

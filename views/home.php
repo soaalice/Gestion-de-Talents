@@ -12,7 +12,7 @@ if ($user->isAuthentified()) {
         echo "<div class='row mt-5'>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=offerForm' class='btn btn-warning btn-lg highlight-btn'>Create an Offer</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=recruiterDashboard' class='btn btn-success btn-lg highlight-btn'>My Offers & Applications</a></p></div>";
-        echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
+        // echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
     } elseif (strtolower($role) === 'client') {
         echo "<p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-outline-success btn-lg highlight-btn'>Evaluation</a></p>";
@@ -26,8 +26,8 @@ if ($user->isAuthentified()) {
             echo "<ul class='list-group mt-3'>";
             foreach ($applications as $application) {
                 echo "<li class='list-group-item d-flex justify-content-between align-items-center application-item'>";
-                echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . " - Salary: " . htmlspecialchars($application['salaire']) . "</div>";
-                echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
+                echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . "</div>";
+                // echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
                 echo "</li>";
             }
             echo "</ul>";

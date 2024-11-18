@@ -57,7 +57,6 @@ $infos = $user->getCvDashboardInfoPerson($userId);
             <th>Status Candidature</th>
             <th>Status Test Écrit</th>
             <th>Status Test Oral</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -121,8 +120,6 @@ $infos = $user->getCvDashboardInfoPerson($userId);
                     }
                     ?>
                 </td>
-                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir
-                            plus</button> </a></td>
 
             </tr>
         <?php endforeach; ?>

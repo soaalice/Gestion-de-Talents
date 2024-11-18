@@ -1,87 +1,90 @@
 <?php
 
+include "header.php";
 require_once 'inc/m_learning.php';
 
 try {
     // Récupérer les offres disponibles
     $id = $_GET['id'] ?? null;
-    if (!$id) {
-        throw new Exception("ID de l'offre manquant !");
+    $offers = $user->getOffers();
 
-// Récupérer les offres disponibles
-$offers = $user->getOffers();
-include "header.php";
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $offerId = $_POST['offer_id'];
-    $applicationDate = $_POST['application_date'];
-    $personId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté est supposé être dans la session
+    // if (!$id) {
+    //     throw new Exception("ID de l'offre manquant !");
+    // }
 
-    if ($user->createApplication($offerId, $applicationDate, $personId)) {
-        echo "<div class='alert alert-success text-center'>Application successfully submitted!</div>";
-    } else {
-        echo "<div class='alert alert-danger text-center'>Failed to submit application.</div>";
-    }
+    // Récupérer les offres disponibles
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $offerId = $_POST['offer_id'];
+        $applicationDate = $_POST['application_date'];
+        $personId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté est supposé être dans la session
 
-    $offers = $user->getOffreById($id);
-    if (empty($offers)) {
-        throw new Exception("Aucune offre trouvée pour l'ID spécifié !");
-    }
+        // if ($user->createApplication($offerId, $applicationDate, $personId)) {
+        //     echo "<div class='alert alert-success text-center'>Application successfully submitted!</div>";
+        // } else {
+        //     echo "<div class='alert alert-danger text-center'>Failed to submit application.</div>";
+        // }
 
-    $test = $user->isApplying($_SESSION['user_id'], $id);
+        // $offers = $user->getOffreById($id);
+        // if (empty($offers)) {
+        //     throw new Exception("Aucune offre trouvée pour l'ID spécifié !");
+        // }
 
-    echo "Offre trouvée : <pre>" . print_r($offers, true) . "</pre>"; // Debug ici
+        // $test = $user->isApplying($_SESSION['user_id'], $id);
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfFile'])) {
-        // Vérification de la session utilisateur
-        $personcv = $_SESSION['user_id'] ?? null;
-        if (!$personcv) {
-            throw new Exception("L'utilisateur connecté n'a pas de CV enregistré !");
+        // echo "Offre trouvée : <pre>" . print_r($offers, true) . "</pre>"; // Debug ici
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['pdfFile'])) {
+            // Vérification de la session utilisateur
+            $personcv = $_SESSION['user_id'] ?? null;
+            if (!$personcv) {
+                throw new Exception("L'utilisateur connecté n'a pas de CV enregistré !");
+            }
+
+            // $offerId = $id;
+            $exigence = $offers[0]['exigence'] ?? '';
+            if (empty($exigence)) {
+                throw new Exception("L'offre n'a pas d'exigence définie !");
+            }
+
+            // Transformer le CV en texte
+            $cvtext = extractTextFromPdf($_FILES['pdfFile']);
+            // var_dump($cvtext);
+            if (empty($cvtext['contenu']) || empty($cvtext['chemin'])) {
+                throw new Exception("Le fichier PDF est invalide ou vide !");
+            }
+
+            // Analyser le CV par rapport à l'exigence
+            $resultatAnalyse = analyzeCV($cvtext['contenu'], $exigence);
+
+            // Sauvegarder le CV et récupérer son ID
+            $idCv = $user->saveCV(
+                $personcv,
+                $resultatAnalyse['education']['content'], $resultatAnalyse['education']['note'],
+                $resultatAnalyse['experience']['content'], $resultatAnalyse['experience']['note'],
+                $resultatAnalyse['competence']['content'], $resultatAnalyse['competence']['note'],
+                $resultatAnalyse['remarque'], $cvtext['chemin']
+            );
+
+            if (!$idCv) {
+                throw new Exception("Échec de la sauvegarde du CV !");
+            }
+
+            // Sauvegarder la candidature
+            $applicationDate = $_POST['application_date'] ?? null;
+            if (!$applicationDate) {
+                throw new Exception("La date de candidature est manquante !");
+            }
+
+            // Exemple de sauvegarde (décommenter si nécessaire)
+            if ($user->createApplication($offerId, $applicationDate, $idCv)) {
+                echo "<p>Application successfully submitted!</p>";
+                header('location:index.php?page=application');
+                exit;
+            } else {
+                throw new Exception("Échec de l'envoi de la candidature !");
+            }
+            
         }
-
-        $offerId = $id;
-        $exigence = $offers[0]['exigence'] ?? '';
-        if (empty($exigence)) {
-            throw new Exception("L'offre n'a pas d'exigence définie !");
-        }
-
-        // Transformer le CV en texte
-        $cvtext = extractTextFromPdf($_FILES['pdfFile']);
-        if (empty($cvtext['contenu']) || empty($cvtext['chemin'])) {
-            throw new Exception("Le fichier PDF est invalide ou vide !");
-        }
-
-        // Analyser le CV par rapport à l'exigence
-        $resultatAnalyse = analyzeCV($cvtext['contenu'], $exigence);
-
-        // Sauvegarder le CV et récupérer son ID
-        $idCv = $user->saveCV(
-            $personcv,
-            $resultatAnalyse['education']['content'], $resultatAnalyse['education']['note'],
-            $resultatAnalyse['experience']['content'], $resultatAnalyse['experience']['note'],
-            $resultatAnalyse['competence']['content'], $resultatAnalyse['competence']['note'],
-            $resultatAnalyse['remarque'], $cvtext['chemin']
-        );
-
-        if (!$idCv) {
-            throw new Exception("Échec de la sauvegarde du CV !");
-        }
-
-        // Sauvegarder la candidature
-        $applicationDate = $_POST['application_date'] ?? null;
-        if (!$applicationDate) {
-            throw new Exception("La date de candidature est manquante !");
-        }
-
-        // Exemple de sauvegarde (décommenter si nécessaire)
-        
-        if ($user->createApplication($offerId, $applicationDate, $idCv)) {
-            echo "<p>Application successfully submitted!</p>";
-            header('location:index.php?page=application');
-            exit;
-        } else {
-            throw new Exception("Échec de l'envoi de la candidature !");
-        }
-        
     }
 } catch (Exception $e) {
     // Gestion des erreurs
@@ -118,9 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <label for="offer_id" style="color: #3a6a40;">Offre :</label>
                             <select name="offer_id" id="offer_id" class="form-control" required>
                                 <?php foreach ($offers as $offer): ?>
-                                    <option value="<?= htmlspecialchars($offer['id']) ?>">
-                                        <?= htmlspecialchars($offer['job_name']) ?> -
-                                        Salaire : <?= htmlspecialchars($offer['salaire']) ?> MGA
+                                    <option
+                                        <?php if($id): if($id == $offerId) echo "selected"; endif ?>
+                                        value="<?= htmlspecialchars($offer['id']) ?>">
+                                        <?= htmlspecialchars($offer['job_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

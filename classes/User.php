@@ -161,6 +161,22 @@ class User
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getUserApplicationsForProfile($userId)
+    {
+        // Récupérer les offres pour lesquelles l'utilisateur a postulé
+        $stmt = $this->db->prepare("
+        SELECT o.id AS offer_id, j.nom AS job_name, o.datecreation
+        FROM Candidature c
+        JOIN Cv on c.idcv = Cv.id
+        JOIN Offre o ON c.idOffre = o.id
+        LEFT JOIN Job j ON o.idjob = j.id
+        WHERE cv.idpersonne = ?
+    ");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function isApplying($userId,$offreid)
     {
         $stmt = $this->db->prepare("
@@ -190,14 +206,14 @@ class User
     }
 
 
-    public function createApplication($offerId, $applicationDate, $personId)
+    public function createApplication($offerId, $applicationDate, $cvId)
     {
         // Insertion d'une candidature dans la base de données
         $stmt = $this->db->prepare("
       INSERT INTO Candidature (idcv, idOffre, datePostule, etat)
         VALUES (?, ?, ?,?)
     ");
-        return $stmt->execute([$personId, $offerId, $applicationDate,'FALSE']);
+        return $stmt->execute([$cvId, $offerId, $applicationDate,'FALSE']);
     }
 
 
@@ -361,8 +377,8 @@ class User
             $chemin
         ])) {
             // Retourner l'identifiant du dernier CV inséré
+            // echo "fin save. Done!";
             return $this->db->lastInsertId();
-            echo "fin save. Done!";
         }
         echo "Echec";
         // En cas d'échec, retourner false
@@ -472,6 +488,8 @@ class User
 
         $stmt->execute([$idrecruteur]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    }
 
     public function getUnreadNotifs($userId)  {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM notifications WHERE idpersonne = :idpersonne AND etat=0 ");

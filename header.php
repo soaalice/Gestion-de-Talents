@@ -67,7 +67,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
 <?php
 if ($user->isAuthentified()) :
-    if ($role == 'Postulant') {
+    if ($role == 'Client') {
         include('views/chat.php');
     }
 ?>

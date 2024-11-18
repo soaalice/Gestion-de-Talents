@@ -3,7 +3,7 @@ INSERT INTO Role (nom) VALUES ('Admin'), ('Client');
 
 
 -- Insertion dans la table "Job"
-INSERT INTO Job (nom) VALUES ('Développeur'), ('Designer'), ('Manager');
+INSERT INTO Job (nom) VALUES ('Developpeur'), ('Designer'), ('Manager');
 
 -- Insertion dans la table "type_evaluation"
 INSERT INTO type_evaluation (nom, maximum, minimum)

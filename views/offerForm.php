@@ -37,8 +37,11 @@ include 'header.php';
                     </option>
                 <?php endforeach; ?>
             </select>
-          <label>Exigence:</label><br>
-    <textarea type="text" name="exigence" required></textarea><br><br>
+        </div>
+        
+        <div class="mb-3">
+            <label>Exigence:</label><br>
+            <textarea type="text" name="exigence" required></textarea><br><br>
         </div>
 
         <div class="mb-3">
@@ -46,8 +49,10 @@ include 'header.php';
             <input type="date" name="date_offer" id="date_offer" class="form-control" required style="background-color: #eaf4e0; border-color: #d0e0d6; color: #3a6a40;">
         </div>
 
- <label>Date Limit of Offer:</label><br>
-    <input type="date" name="date_limit" required><br><br>
+        <div class="mb-3">
+            <label class="form-label" style="color: #2b7a2b;">Date Limit of Offer:</label><br>
+            <input type="date" name="date_limit" class="form-control" ="background-color: #eaf4e0; border-color: #d0e0d6; color: #3a6a40;" required><br><br>
+        </div>
 
         <div class="text-center">
             <input type="submit" value="Create Offer" class="btn btn-warning btn-lg highlight-btn">
