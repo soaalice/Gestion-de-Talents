@@ -1,0 +1,605 @@
+{
+    "informatique": [
+        {
+            "question": "Quel langage est utilisé pour créer des sites web dynamiques ?",
+            "choices": ["Python", "PHP", "C++", "Java"],
+            "answer": "PHP"
+        },
+        {
+            "question": "Que signifie HTML ?",
+            "choices": [
+                "HyperText Markup Language",
+                "HighText Markup Language",
+                "HyperTool Multi Language",
+                "HyperText Multi Language"
+            ],
+            "answer": "HyperText Markup Language"
+        },
+        {
+            "question": "Quel est le système d'exploitation le plus utilisé ?",
+            "choices": ["Windows", "Linux", "MacOS", "Android"],
+            "answer": "Windows"
+        },
+        {
+            "question": "Qu'est-ce qu'un navigateur web ?",
+            "choices": [
+                "Un moteur de recherche",
+                "Un logiciel pour accéder au web",
+                "Un réseau informatique",
+                "Une application mobile"
+            ],
+            "answer": "Un logiciel pour accéder au web"
+        },
+        {
+            "question": "Qu'est-ce qu'un fichier CSS ?",
+            "choices": [
+                "Un fichier de données",
+                "Un fichier de style",
+                "Un programme exécutable",
+                "Un fichier texte"
+            ],
+            "answer": "Un fichier de style"
+        },
+        {
+            "question": "Que signifie API ?",
+            "choices": [
+                "Application Programming Interface",
+                "Application Process Indicator",
+                "Automated Programming Integration",
+                "Advanced Program Interaction"
+            ],
+            "answer": "Application Programming Interface"
+        },
+        {
+            "question": "Quel est le rôle d'une base de données ?",
+            "choices": [
+                "Stocker et organiser des informations",
+                "Analyser des données financières",
+                "Gérer la mémoire de l'ordinateur",
+                "Créer des animations web"
+            ],
+            "answer": "Stocker et organiser des informations"
+        },
+        {
+            "question": "Qu'est-ce qu'un algorithme ?",
+            "choices": [
+                "Une suite d'étapes pour résoudre un problème",
+                "Un programme informatique",
+                "Une langue de programmation",
+                "Un protocole réseau"
+            ],
+            "answer": "Une suite d'étapes pour résoudre un problème"
+        },
+        {
+            "question": "Quel est l'objectif d'un pare-feu ?",
+            "choices": [
+                "Protéger un réseau informatique",
+                "Augmenter la vitesse de l'ordinateur",
+                "Créer des sauvegardes automatiques",
+                "Supprimer les virus"
+            ],
+            "answer": "Protéger un réseau informatique"
+        },
+        {
+            "question": "Qu'est-ce que le Cloud Computing ?",
+            "choices": [
+                "L'utilisation de services informatiques via internet",
+                "Un outil de gestion de projets",
+                "Un langage de programmation",
+                "Un serveur local"
+            ],
+            "answer": "L'utilisation de services informatiques via internet"
+        }
+    ],
+    "commerce": [
+        {
+            "question": "Qu'est-ce que le commerce électronique ?",
+            "choices": [
+                "Publicité en ligne",
+                "Vente en ligne",
+                "Gestion d'inventaire",
+                "Création de sites web"
+            ],
+            "answer": "Vente en ligne"
+        },
+        {
+            "question": "Que signifie B2B ?",
+            "choices": [
+                "Business to Business",
+                "Business to Buyer",
+                "Buyer to Business",
+                "Buyer to Buyer"
+            ],
+            "answer": "Business to Business"
+        },
+        {
+            "question": "Qu'est-ce qu'une stratégie commerciale ?",
+            "choices": [
+                "Un plan pour atteindre les objectifs de vente",
+                "Une méthode de recrutement",
+                "Un système de gestion financière",
+                "Un outil de communication interne"
+            ],
+            "answer": "Un plan pour atteindre les objectifs de vente"
+        },
+        {
+            "question": "Que représente un chiffre d'affaires ?",
+            "choices": [
+                "Le total des ventes réalisées",
+                "Le bénéfice net",
+                "Les coûts de production",
+                "Le capital investi"
+            ],
+            "answer": "Le total des ventes réalisées"
+        },
+        {
+            "question": "Quel est l'objectif principal d'une étude de marché ?",
+            "choices": [
+                "Analyser les besoins des clients",
+                "Augmenter les ventes",
+                "Former les employés",
+                "Réduire les coûts"
+            ],
+            "answer": "Analyser les besoins des clients"
+        },
+        {
+            "question": "Que signifie CRM ?",
+            "choices": [
+                "Customer Relationship Management",
+                "Commercial Resource Management",
+                "Client Response Method",
+                "Consumer Retail Model"
+            ],
+            "answer": "Customer Relationship Management"
+        },
+        {
+            "question": "Quel est le rôle d'un vendeur ?",
+            "choices": [
+                "Assurer la satisfaction des clients",
+                "Superviser la production",
+                "Analyser les finances",
+                "Gérer les stocks"
+            ],
+            "answer": "Assurer la satisfaction des clients"
+        },
+        {
+            "question": "Qu'est-ce qu'un prospect dans le commerce ?",
+            "choices": [
+                "Un potentiel client",
+                "Un employé stagiaire",
+                "Un produit non vendu",
+                "Une stratégie marketing"
+            ],
+            "answer": "Un potentiel client"
+        },
+        {
+            "question": "Que signifie le terme \"cash flow\" ?",
+            "choices": [
+                "La trésorerie disponible",
+                "Les dettes de l'entreprise",
+                "Les bénéfices nets",
+                "Le chiffre d'affaires"
+            ],
+            "answer": "La trésorerie disponible"
+        },
+        {
+            "question": "Quelle est l'importance de la fidélisation client ?",
+            "choices": [
+                "Augmenter les ventes récurrentes",
+                "Réduire les coûts de production",
+                "Accroître le capital humain",
+                "Améliorer la communication interne"
+            ],
+            "answer": "Augmenter les ventes récurrentes"
+        }
+    ],
+    "comptabilité": [
+        {
+            "question": "Qu'est-ce qu'un bilan comptable ?",
+            "choices": [
+                "Un rapport financier",
+                "Une stratégie marketing",
+                "Un tableau des employés",
+                "Une méthode de calcul"
+            ],
+            "answer": "Un rapport financier"
+        },
+        {
+            "question": "Que signifie TVA ?",
+            "choices": [
+                "Taxe sur la Valeur Ajoutée",
+                "Taxe sur le Virement Actuel",
+                "Tarif Valeur Achat",
+                "Taxe Vente Ajoutée"
+            ],
+            "answer": "Taxe sur la Valeur Ajoutée"
+        },
+        {
+            "question": "Qu'est-ce qu'une écriture comptable ?",
+            "choices": [
+                "Un enregistrement d'une opération financière",
+                "Une analyse de marché",
+                "Un plan de gestion",
+                "Une prévision budgétaire"
+            ],
+            "answer": "Un enregistrement d'une opération financière"
+        },
+        {
+            "question": "Que représente le passif d'une entreprise ?",
+            "choices": [
+                "Ses dettes",
+                "Ses revenus",
+                "Ses investissements",
+                "Ses stocks"
+            ],
+            "answer": "Ses dettes"
+        },
+        {
+            "question": "Qu'est-ce qu'un compte de résultat ?",
+            "choices": [
+                "Un document qui présente les performances financières",
+                "Une méthode de calcul des taxes",
+                "Un plan de financement",
+                "Un rapport sur les employés"
+            ],
+            "answer": "Un document qui présente les performances financières"
+        },
+        {
+            "question": "Que signifie amortissement en comptabilité ?",
+            "choices": [
+                "La perte de valeur d'un bien",
+                "L'augmentation des revenus",
+                "Le remboursement d'une dette",
+                "La création de capital"
+            ],
+            "answer": "La perte de valeur d'un bien"
+        },
+        {
+            "question": "Qu'est-ce qu'une immobilisation ?",
+            "choices": [
+                "Un bien destiné à être utilisé durablement",
+                "Un produit en cours de vente",
+                "Un stock temporaire",
+                "Une dépense immédiate"
+            ],
+            "answer": "Un bien destiné à être utilisé durablement"
+        },
+        {
+            "question": "Quel est le rôle d'un comptable ?",
+            "choices": [
+                "Gérer les opérations financières",
+                "Superviser la production",
+                "Recruter du personnel",
+                "Créer des stratégies commerciales"
+            ],
+            "answer": "Gérer les opérations financières"
+        },
+        {
+            "question": "Qu'est-ce qu'un exercice comptable ?",
+            "choices": [
+                "Une période pour laquelle les comptes sont établis",
+                "Un entraînement pour les employés",
+                "Un tableau de bord de production",
+                "Une analyse marketing"
+            ],
+            "answer": "Une période pour laquelle les comptes sont établis"
+        },
+        {
+            "question": "Qu'est-ce qu'un actif ?",
+            "choices": [
+                "Les biens et ressources de l'entreprise",
+                "Les dettes de l'entreprise",
+                "Les stocks périmés",
+                "Les comptes de résultat"
+            ],
+            "answer": "Les biens et ressources de l'entreprise"
+        }
+    ],
+    "rh": [
+        {
+            "question": "Quelle est la fonction principale des RH ?",
+            "choices": [
+                "Gérer les finances",
+                "Recruter et former les employés",
+                "Créer des produits",
+                "Développer des stratégies de vente"
+            ],
+            "answer": "Recruter et former les employés"
+        },
+        {
+            "question": "Que signifie DRH ?",
+            "choices": [
+                "Directeur des Ressources Humaines",
+                "Délégué des Relations Humaines",
+                "Direction des Ressources Hôtelières",
+                "Dossier de Recrutement Homologué"
+            ],
+            "answer": "Directeur des Ressources Humaines"
+        },
+        {
+            "question": "Quelle est l'importance d'un entretien annuel ?",
+            "choices": [
+                "Évaluer les performances et objectifs des employés",
+                "Augmenter les salaires",
+                "Définir les plans financiers",
+                "Analyser le marché"
+            ],
+            "answer": "Évaluer les performances et objectifs des employés"
+        },
+        {
+            "question": "Qu'est-ce qu'un contrat de travail ?",
+            "choices": [
+                "Un accord entre un employé et un employeur",
+                "Une facture commerciale",
+                "Un document de formation",
+                "Un tableau de bord financier"
+            ],
+            "answer": "Un accord entre un employé et un employeur"
+        },
+        {
+            "question": "Que signifie GPEC ?",
+            "choices": [
+                "Gestion Prévisionnelle des Emplois et des Compétences",
+                "Gestion des Projets en Cours",
+                "Gestion Pratique des Évaluations Courantes",
+                "Gestion du Personnel en CDD"
+            ],
+            "answer": "Gestion Prévisionnelle des Emplois et des Compétences"
+        },
+        {
+            "question": "Qu'est-ce qu'une fiche de poste ?",
+            "choices": [
+                "Une description des responsabilités d'un emploi",
+                "Un rapport sur les employés",
+                "Un outil de formation",
+                "Un plan de recrutement"
+            ],
+            "answer": "Une description des responsabilités d'un emploi"
+        },
+        {
+            "question": "Quel est le rôle d'un gestionnaire RH ?",
+            "choices": [
+                "Gérer les recrutements et formations",
+                "Créer des campagnes publicitaires",
+                "Analyser les marchés financiers",
+                "Superviser la production"
+            ],
+            "answer": "Gérer les recrutements et formations"
+        },
+        {
+            "question": "Qu'est-ce qu'une politique de diversité ?",
+            "choices": [
+                "Un engagement à promouvoir l'égalité et l'inclusion",
+                "Un plan de réduction des coûts",
+                "Un programme de formation continue",
+                "Une stratégie de recrutement local"
+            ],
+            "answer": "Un engagement à promouvoir l'égalité et l'inclusion"
+        },
+        {
+            "question": "Que signifie un CDD ?",
+            "choices": [
+                "Contrat à Durée Déterminée",
+                "Convention de Droit du Travail",
+                "Compte de Développement Durable",
+                "Certificat de Décision Départementale"
+            ],
+            "answer": "Contrat à Durée Déterminée"
+        },
+        {
+            "question": "Qu'est-ce qu'une gestion de carrière ?",
+            "choices": [
+                "L'accompagnement d'un employé dans son évolution professionnelle",
+                "Un plan de marketing RH",
+                "Une analyse des coûts salariaux",
+                "Un outil de gestion administrative"
+            ],
+            "answer": "L'accompagnement d'un employé dans son évolution professionnelle"
+        }
+    ],
+    "gestion": [
+        {
+            "question": "Qu'est-ce que la gestion des risques ?",
+            "choices": [
+                "Planification des dépenses",
+                "Prévention des problèmes",
+                "Gestion des employés",
+                "Optimisation des ressources"
+            ],
+            "answer": "Prévention des problèmes"
+        },
+        {
+            "question": "Quel est le rôle principal du contrôle de gestion ?",
+            "choices": [
+                "Analyser les performances de l'entreprise",
+                "Gérer les stocks",
+                "Former les employés",
+                "Superviser la production"
+            ],
+            "answer": "Analyser les performances de l'entreprise"
+        },
+        {
+            "question": "Que signifie ROI ?",
+            "choices": [
+                "Return on Investment",
+                "Rate of Innovation",
+                "Resource Optimization Index",
+                "Revenue Over Income"
+            ],
+            "answer": "Return on Investment"
+        },
+        {
+            "question": "Qu'est-ce qu'un tableau de bord en gestion ?",
+            "choices": [
+                "Un outil de suivi des performances",
+                "Un rapport comptable",
+                "Un outil de recrutement",
+                "Un logiciel de facturation"
+            ],
+            "answer": "Un outil de suivi des performances"
+        },
+        {
+            "question": "Qu'est-ce que la gestion des ressources ?",
+            "choices": [
+                "L'optimisation de l'utilisation des ressources",
+                "La création de budgets",
+                "L'analyse des marchés",
+                "Le recrutement de personnel"
+            ],
+            "answer": "L'optimisation de l'utilisation des ressources"
+        },
+        {
+            "question": "Que signifie SWOT en gestion ?",
+            "choices": [
+                "Strengths, Weaknesses, Opportunities, Threats",
+                "Success, Work, Opportunities, Targets",
+                "Strategy, Workforce, Organization, Training",
+                "Supply, Workflow, Optimization, Targets"
+            ],
+            "answer": "Strengths, Weaknesses, Opportunities, Threats"
+        },
+        {
+            "question": "Qu'est-ce qu'une stratégie d'entreprise ?",
+            "choices": [
+                "Un plan pour atteindre les objectifs à long terme",
+                "Un tableau de suivi financier",
+                "Une méthode de recrutement",
+                "Une analyse des risques"
+            ],
+            "answer": "Un plan pour atteindre les objectifs à long terme"
+        },
+        {
+            "question": "Qu'est-ce qu'un budget prévisionnel ?",
+            "choices": [
+                "Une estimation des revenus et dépenses futurs",
+                "Un plan de réduction des coûts",
+                "Un rapport annuel de gestion",
+                "Un outil de contrôle des employés"
+            ],
+            "answer": "Une estimation des revenus et dépenses futurs"
+        },
+        {
+            "question": "Quel est le rôle d'un gestionnaire de projet ?",
+            "choices": [
+                "Planifier et superviser les projets",
+                "Analyser les données financières",
+                "Recruter des employés",
+                "Gérer la communication interne"
+            ],
+            "answer": "Planifier et superviser les projets"
+        },
+        {
+            "question": "Que signifie KPI ?",
+            "choices": [
+                "Key Performance Indicator",
+                "Key Planning Innovation",
+                "Knowledge Process Integration",
+                "Knowledge Performance Index"
+            ],
+            "answer": "Key Performance Indicator"
+        }
+    ],
+    "marketing": [
+        {
+            "question": "Quelle est la définition du marketing ?",
+            "choices": [
+                "Gestion de la publicité et de la relation client",
+                "Analyse des données financières",
+                "Création de produits",
+                "Amélioration des performances RH"
+            ],
+            "answer": "Gestion de la publicité et de la relation client"
+        },
+        {
+            "question": "Que signifie le marketing B2C ?",
+            "choices": [
+                "Business to Consumer",
+                "Business to Customer",
+                "Brand to Customer",
+                "Buyer to Customer"
+            ],
+            "answer": "Business to Consumer"
+        },
+        {
+            "question": "Quel est le but d'une campagne publicitaire ?",
+            "choices": [
+                "Promouvoir un produit ou service",
+                "Réduire les coûts de production",
+                "Améliorer les relations avec les employés",
+                "Analyser les performances financières"
+            ],
+            "answer": "Promouvoir un produit ou service"
+        },
+        {
+            "question": "Que signifie ROI dans une campagne marketing ?",
+            "choices": [
+                "Return on Investment",
+                "Rate of Innovation",
+                "Revenue Over Income",
+                "Resource Optimization Index"
+            ],
+            "answer": "Return on Investment"
+        },
+        {
+            "question": "Qu'est-ce qu'une étude de marché ?",
+            "choices": [
+                "L'analyse des besoins et attentes des consommateurs",
+                "Un rapport financier sur le marché",
+                "Une méthode pour recruter des clients",
+                "Une stratégie pour réduire les coûts"
+            ],
+            "answer": "L'analyse des besoins et attentes des consommateurs"
+        },
+        {
+            "question": "Que signifie SEO en marketing digital ?",
+            "choices": [
+                "Search Engine Optimization",
+                "Sales Engagement Optimization",
+                "Strategic Event Organization",
+                "Social Enterprise Operations"
+            ],
+            "answer": "Search Engine Optimization"
+        },
+        {
+            "question": "Qu'est-ce qu'un persona en marketing ?",
+            "choices": [
+                "Un profil type de client cible",
+                "Un employé chargé des ventes",
+                "Un tableau de gestion des performances",
+                "Un logiciel d'analyse"
+            ],
+            "answer": "Un profil type de client cible"
+        },
+        {
+            "question": "Quel est l'objectif du marketing relationnel ?",
+            "choices": [
+                "Créer et maintenir des relations à long terme avec les clients",
+                "Augmenter la production",
+                "Réduire les coûts publicitaires",
+                "Analyser les ventes"
+            ],
+            "answer": "Créer et maintenir des relations à long terme avec les clients"
+        },
+        {
+            "question": "Que signifie le marketing 4P ?",
+            "choices": [
+                "Produit, Prix, Place, Promotion",
+                "Plan, Produit, Prix, Projet",
+                "Prix, Place, Promotion, Publicité",
+                "Produit, Plan, Promotion, Performance"
+            ],
+            "answer": "Produit, Prix, Place, Promotion"
+        },
+        {
+            "question": "Qu'est-ce que le branding en marketing ?",
+            "choices": [
+                "La gestion de l'image de marque d'une entreprise",
+                "Un outil de recrutement",
+                "Un logiciel d'analyse financière",
+                "Une technique de réduction des coûts"
+            ],
+            "answer": "La gestion de l'image de marque d'une entreprise"
+        }
+    ]
+}
+

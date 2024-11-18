@@ -16,7 +16,7 @@ header('Content-Type: text/html; charset=UTF-8');
     <title>Gestion des Talents</title>
 </head>
 
-<body style="background-color: #eaf4f0;"> <!-- Arrière-plan apaisant -->
+<body style="background-color: #eaf4f0;" class="vh-100"> <!-- Arrière-plan apaisant -->
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #107c41;">

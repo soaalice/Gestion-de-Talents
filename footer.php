@@ -1,4 +1,4 @@
-<footer class="bg-dark text-white py-4 mt-5 ">
+<footer class="bg-dark text-white py-4 mt-5 col-12">
     <div class="container">
         <div class="row">
             <!-- Section Informations de Contact -->

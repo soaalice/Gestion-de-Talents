@@ -61,6 +61,9 @@ switch ($page) {
     case 'chat':
         include 'views/chatbot.php';
         break;
+    case 'quest':
+        include 'views/quest.php';
+        break;
     case 'logout':
         $user->logout();
         header('Location: index.php');

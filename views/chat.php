@@ -8,6 +8,7 @@
     /* Style de la bulle de chat */
     .chat-icon {
         position: fixed;
+        z-index: 10;
         bottom: 20px;
         right: 20px;
         background-color: #007bff;

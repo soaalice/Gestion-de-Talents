@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['profile_data'])) {
     <form method="post" action="index.php?page=profileForm" class="shadow-lg p-4" style="background-color: #f1f8f3; border-radius: 8px;">
         <div class="mb-3">
             <label for="offer_id" class="form-label" style="color: #2b7a2b;">Select Offer</label>
-            <select name="offer_id" id="offer_id" class="form-select" required onchange="this.form.submit()">
+            <select name="offer_id" id="offer_id" value="<?php echo $offerId ?>" class="form-select" required onchange="this.form.submit()">
                 <option value="" disabled selected>Select an offer</option>
                 <?php foreach ($offers as $offer): ?>
                     <option value="<?= htmlspecialchars($offer['offer_id']) ?>" <?= isset($offerId) && $offer['offer_id'] == $offerId ? 'selected' : '' ?>>
