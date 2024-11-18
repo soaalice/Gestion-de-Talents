@@ -1,6 +1,6 @@
 <?php
 // Vérification que l'utilisateur est un recruteur
-if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'recruteur') {
+if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
     header('Location: index.php?page=login');
     exit;
 }
@@ -12,8 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Insertion de la note dans la table Evaluation
     $stmt = $db->getConnection()->prepare("
-        INSERT INTO Evaluation (note, idcandidature, idtype)
-        VALUES (?, ?, 1)
+        INSERT INTO Evaluation (note, idcandidature, idtypeevaluation, dateevaluation)
+        VALUES (?, ?, 1,now())
     ");
     $stmt->execute([$note, $applicationId]);
 

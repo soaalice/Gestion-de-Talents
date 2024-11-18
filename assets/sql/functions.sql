@@ -138,7 +138,7 @@ FOR EACH ROW
 EXECUTE FUNCTION update_isTaken_offre();
 
 
-CREATE OR REPLACE view v_cv_dashboard AS
+CREATE OR REPLACE VIEW v_cv_dashboard AS
 SELECT 
     c.id AS id_candidature,
     p.id AS id_personne,
@@ -146,6 +146,7 @@ SELECT
     j.nom AS nom_job,
     c.idcv AS id_cv,
     c.idoffre AS id_offre,
+    o.idpersonne AS id_recruteur,  -- Ajout de l'id du recruteur
     cv.note_competence AS note_competence,
     cv.note_experience AS note_experience,
     cv.note_education AS note_education,

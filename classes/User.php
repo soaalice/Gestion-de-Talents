@@ -447,4 +447,30 @@ class User
     }
 
 
+    public function getCvDashboardInfoOffreRecruter($idrecruteur)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                nom_job,
+                id_offre,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_recruteur = ?
+        ");
+
+        $stmt->execute([$idrecruteur]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
 }   

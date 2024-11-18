@@ -11,7 +11,7 @@ $recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
 $offers = $user->getRecruiterOffers($recruiterId);
 
 // Récupérer les candidatures pour ces offres
-$applications = $user->getRecruiterApplications($recruiterId);
+$applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
 ?>
 
 <h2>My Job Offers</h2>
@@ -40,10 +40,11 @@ $applications = $user->getRecruiterApplications($recruiterId);
 <table border="1">
     <thead>
         <tr>
-            <th>Application ID</th>
-            <th>Candidate Name</th>
-            <th>Job Name</th>
-            <th>Application Date</th>
+            <th>ID Candidature</th>
+            <th>Nom de la Personne</th>
+            <th>Nom du Job</th>
+            <th>Moyenne des Notes</th>
+            <th>Date de Postulation</th>
             <th>Status Candidature</th>
             <th>Status Test Écrit</th>
             <th>Status Test Oral</th>
@@ -52,21 +53,21 @@ $applications = $user->getRecruiterApplications($recruiterId);
     </thead>
     <tbody>
         <?php foreach ($applications as $application):
-            $compatibility = $user->getApplicationCompatibility($application['candidature_id']);
-            $writtenTestStatus = $user->getWrittenTestStatus($application['candidature_id']);
-            $oralTestStatus = $user->getOralTestStatus($application['candidature_id']);
+            $writtenTestStatus = $user->getWrittenTestStatus($application['id_candidature']);
+            $oralTestStatus = $user->getOralTestStatus($application['id_candidature']);
         ?>
             <tr>
-                <td><?= htmlspecialchars($application['candidature_id']) ?></td>
-                <td><?= htmlspecialchars($application['candidate_name']) ?></td>
-                <td><?= htmlspecialchars($application['job_name']) ?></td>
-                <td><?= htmlspecialchars($application['datecandidature']) ?></td>
+                <td><?php echo htmlspecialchars($application['id_candidature']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_personne']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_job']); ?></td>
+                <td><?php echo htmlspecialchars($application['moyenne_notes']); ?></td>
+                <td><?php echo htmlspecialchars($application['datepostule']); ?></td>
                 <!-- Statut Candidature -->
                 <td>
                     <?php
-                    if ($compatibility == 1) {
+                    if ($application['moyenne_notes'] < 2 ) {
                         echo '<span style="color: red;">Incompatible</span>';
-                    } elseif ($compatibility == 2) {
+                    } elseif ($application['moyenne_notes'] > 2 && $application['moyenne_notes'] < 4) {
                         echo '<span style="color: green;">Compatible</span>';
                     } else {
                         echo '<span>Surcompatible</span>';
@@ -77,16 +78,16 @@ $applications = $user->getRecruiterApplications($recruiterId);
                 <!-- Statut Test Écrit -->
                 <td>
                     <?php
-                    if ($compatibility == 1) {
+                    if ($application['moyenne_notes'] < 2) {
                         echo 'N/A'; // Si incompatible, pas de test écrit
-                    } elseif ($compatibility == 2 || $compatibility == 3) {
+                    } elseif ($application['moyenne_notes']  > 2) {
                         if ($writtenTestStatus) {
                             // echo 'Note: ' . number_format($writtenTestStatus['note'], 2); // Affiche la note du test écrit
                             $noteWrittenTest = $writtenTestStatus['note'];
                             $style = $user->getStyleForNote(1, $noteWrittenTest);
                             echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
                         } else {
-                            echo '<a href="index.php?page=writtenTestForm&applicationId=' . $application['candidature_id'] . '">Évaluer</a>';
+                            echo '<a href="index.php?page=writtenTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
                         }
                     }
                     ?>
@@ -95,9 +96,9 @@ $applications = $user->getRecruiterApplications($recruiterId);
                 <!-- Statut Test Oral -->
                 <td>
                     <?php
-                    if ($compatibility == 1) {
+                    if ($application['moyenne_notes'] < 2) {
                         echo 'N/A'; // Si incompatible, pas de test oral
-                    } elseif ($compatibility == 2 || $compatibility == 3) {
+                    } elseif ($application['moyenne_notes'] > 2) {
                         if (!$writtenTestStatus) {
                             echo 'Effectuer Préalablement le Test Écrit';
                         } else {
@@ -107,7 +108,7 @@ $applications = $user->getRecruiterApplications($recruiterId);
                                 $style = $user->getStyleForNote(2, $noteWrittenTest);
                                 echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
                             } else {
-                                echo '<a href="index.php?page=oralTestForm&applicationId=' . $application['candidature_id'] . '">Évaluer</a>';
+                                echo '<a href="index.php?page=oralTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
                             }
                         }
                     } else {
@@ -115,18 +116,8 @@ $applications = $user->getRecruiterApplications($recruiterId);
                     }
                     ?>
                 </td>
-                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['idoffre']) ?>&&idcandidat=<?= htmlspecialchars($application['candidature_id']) ?>"><button>Voir plus</button> </a></td>
-
-                <!-- <td>
-                    <?php if (!$application['istaken']): ?>
-                        <form action="index.php?page=updateTakenStatus" method="post">
-                            <input type="hidden" name="candidature_id" value="<?= htmlspecialchars($application['candidature_id']) ?>">
-                            <button type="submit">Attribuer l'Offre</button>
-                        </form>
-                    <?php else: ?>
-                        <span>Already Taken</span>
-                    <?php endif; ?>
-                </td> -->
+                <!-- <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td> -->
+                <td><a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
