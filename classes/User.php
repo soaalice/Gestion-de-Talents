@@ -346,4 +346,10 @@ class User
         $stmt->execute();
     }
 
+    public function insertNotifs($text, $iddestinataire)  {
+        $stmt = $this->db->prepare("INSERT INTO notifications (textenotif, idpersonne) VALUES ( :texte , :idpersonne )");
+        $stmt->bindParam(':texte', $text, PDO::PARAM_STR);
+        $stmt->bindParam(':idpersonne', $iddestinataire, PDO::PARAM_INT);
+        $stmt->execute();
+    }
 }   
