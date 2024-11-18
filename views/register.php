@@ -5,8 +5,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $phone = $_POST['phone'] ?? null;
     $dob = $_POST['dob'];
+    $idrole = $_POST['roles'];
 
-    if ($user->register($name, $email, $password, $phone, $dob)) {
+    if ($user->register2($name, $email, $password, $phone, $dob,$idrole)) {
         $user->login($email, $password); // Connexion automatique après l'inscription
         header('Location: index.php');
         exit;
@@ -15,11 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-?>
+ // Récupérer les rôles à afficher dans le formulaire
+ $roles = $user->getRoles();
 
-<?php
-    // Récupérer les rôles à afficher dans le formulaire
-    $roles = $user->getRoles();
 ?>
 
 <form method="post" action="index.php?page=register">
@@ -37,6 +36,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <label>Date of Birth:</label><br>
     <input type="date" name="dob" required><br><br>
+
+    <label for="roles">Choisissez un rôle :</label>
+        <select name="roles" id="roles">
+            <?php foreach ($roles as $item): ?>
+                <option value="<?= htmlspecialchars($item['id']) ?>">
+                    <?= htmlspecialchars($item['nom']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
     
 
     <input type="submit" value="Register">

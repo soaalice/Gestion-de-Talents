@@ -20,6 +20,19 @@ class User
         return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, 2]);
     }
 
+    public function register2($name, $email, $password, $phone, $dob,$idRole)
+    {
+        // Hashage du mot de passe avant la sauvegarde
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        $stmt = $this->db->prepare("
+        INSERT INTO Personne (nom, email, mdp, phone, datenaissance, idrole)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+        return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, $idRole]);
+    }
+
+
 
     public function login($email, $password)
     {
@@ -304,6 +317,55 @@ class User
         $stmt->execute();
 
         return $stmt->fetchColumn();  // Renvoie l'ID de la personne
+    }
+
+
+    // Modif Fanah
+
+    public function getExigenceByOffre($idOffre)
+    {
+        // Préparer la requête SQL
+        $stmt = $this->db->prepare("
+            SELECT exigence
+            FROM Offre
+            WHERE id = :id_offre
+        ");
+
+        // Exécuter la requête avec le paramètre
+        $stmt->execute([':id_offre' => $idOffre]);
+
+        // Récupérer le résultat
+        return $stmt->fetchColumn();
+    }
+
+    public function saveCV($idPersonne, $education, $noteEducation, $experience, $noteExperience, $competence, $noteCompetence, $remarque, $chemin)
+    {
+        echo "début save";
+        // Préparer la requête d'insertion
+        $stmt = $this->db->prepare("
+            INSERT INTO cv (idpersonne, education, note_education, experience, note_experience, competence, note_competence, remarque, chemin)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        // Exécuter la requête avec les données
+        if ($stmt->execute([
+            $idPersonne,
+            $education,
+            $noteEducation,
+            $experience,
+            $noteExperience,
+            $competence,
+            $noteCompetence,
+            $remarque,
+            $chemin
+        ])) {
+            // Retourner l'identifiant du dernier CV inséré
+            return $this->db->lastInsertId();
+            echo "fin save. Done!";
+        }
+        echo "Echec";
+        // En cas d'échec, retourner false
+        return false;
     }
 
 

@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </select><br><br>
 
     <label>Exigence:</label><br>
-    <input type="text" name="exigence" required><br><br>
+    <textarea type="text" name="exigence" required></textarea><br><br>
 
     <label>Date of Offer:</label><br>
     <input type="date" name="date_offer" required><br><br>

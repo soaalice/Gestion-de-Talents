@@ -1,3 +1,9 @@
+\c postgres;
+DROP DATABASE talents;
+
+CREATE DATABASE talents;
+
+\c talents;
 -- Création de la table "Role"
 CREATE TABLE Role (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque rôle
@@ -28,16 +34,21 @@ CREATE TABLE Offre (
     idjob INTEGER REFERENCES Job(id) ON DELETE SET NULL,  -- Job associé à l'offre
     dateCreation DATE NOT NULL,    -- Date de l'offre
     dateFin DATE NOT NULL,
-    exigence VARCHAR(1000)        -- Exigence pour l'offre
+    exigence TEXT       -- Exigence pour l'offre
 );
 
 -- Création de la table "cv"
 CREATE TABLE cv (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque CV
     idpersonne INTEGER REFERENCES Personne(id) ON DELETE CASCADE,  -- Personne à laquelle le CV appartient
-    competence VARCHAR(1000) NOT NULL,   -- Compétences de la personne
-    experience VARCHAR(1000) NOT NULL,   -- Expériences de la personne
-    education VARCHAR(1000) NOT NULL     -- Formation de la personne
+    competence TEXT NOT NULL,   -- Compétences de la personne
+    note_competence INTEGER NOT NULL,
+    experience TEXT NOT NULL,   -- Expériences de la personne
+    note_experience INTEGER NOT NULL,
+    education TEXT NOT NULL,     -- Formation de la personne
+    note_education INTEGER NOT NULL,
+    remarque TEXT,
+    chemin VARCHAR(255) NOT NULL
 );
 
 -- Création de la table "Candidature"
@@ -76,7 +87,9 @@ CREATE TABLE embauche (
 -- Création de la table "notifications"
 CREATE TABLE notifications (
     id SERIAL PRIMARY KEY,
-    textNotif VARCHAR(6000),     -- Texte de la notification
+    textNotif TEXT,     -- Texte de la notification
     etat BOOLEAN NOT NULL,       -- Statut de la notification
     dateheure TIMESTAMP NOT NULL -- Date et heure de la notification
 );
+
+

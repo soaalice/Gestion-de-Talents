@@ -7,7 +7,7 @@ class Database
     {
         $dsn = 'pgsql:host=localhost;dbname=talents';
         $user = 'postgres';
-        $password = 'Dbamanager1';
+        $password = '2547';
 
         try {
             $this->pdo = new PDO($dsn, $user, $password);
