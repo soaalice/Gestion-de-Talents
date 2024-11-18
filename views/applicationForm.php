@@ -1,6 +1,6 @@
 <?php
 
-require_once 'inc/func.php';
+require_once 'inc/m_learning.php';
 
 try {
     // Récupérer les offres disponibles
@@ -37,14 +37,9 @@ try {
             throw new Exception("Le fichier PDF est invalide ou vide !");
         }
 
-        // Debug: Afficher le texte extrait du PDF
-        echo "Texte extrait du fichier PDF : " . $cvtext['contenu'] . "<br>";
-
         // Analyser le CV par rapport à l'exigence
         $resultatAnalyse = analyzeCV($cvtext['contenu'], $exigence);
-        echo "Résultat de l'analyse : <pre>" . print_r($resultatAnalyse, true) . "</pre>";
 
-        echo "tonga eto aloha";
         // Sauvegarder le CV et récupérer son ID
         $idCv = $user->saveCV(
             $personcv,
@@ -54,13 +49,9 @@ try {
             $resultatAnalyse['remarque'], $cvtext['chemin']
         );
 
-        echo "Tohizo";
-
         if (!$idCv) {
             throw new Exception("Échec de la sauvegarde du CV !");
         }
-
-        echo $idCv . " : ID du CV enregistré.<br>";
 
         // Sauvegarder la candidature
         $applicationDate = $_POST['application_date'] ?? null;
@@ -69,7 +60,7 @@ try {
         }
 
         // Exemple de sauvegarde (décommenter si nécessaire)
-        /*
+        
         if ($user->createApplication($offerId, $applicationDate, $idCv)) {
             echo "<p>Application successfully submitted!</p>";
             header('location:index.php?page=application');
@@ -77,7 +68,7 @@ try {
         } else {
             throw new Exception("Échec de l'envoi de la candidature !");
         }
-        */
+        
     }
 } catch (Exception $e) {
     // Gestion des erreurs

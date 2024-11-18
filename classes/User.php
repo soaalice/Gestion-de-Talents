@@ -369,4 +369,52 @@ class User
     }
 
 
+    public function getCvDashboardInfoPerson($idperson)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                nom_job,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_personne = ?
+        ");
+
+        $stmt->execute([$idperson]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCvDashboardInfoOffre($offre)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                nom_job,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_offre = ?
+        ");
+
+        $stmt->execute([$offre]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }   
