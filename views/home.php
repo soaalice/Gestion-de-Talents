@@ -14,6 +14,7 @@ if ($user->isAuthentified()) {
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
     } elseif (strtolower($role) === 'postulant') {
+        echo "<p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-outline-success btn-lg highlight-btn'>Evaluation</a></p>";
         echo "<p class='text-center'><a href='index.php?page=applicationForm' class='btn btn-outline-warning btn-lg highlight-btn'>Apply for an Offer</a></p>";
 
         $applications = $user->getUserApplicationsForProfile($_SESSION['user_id']);
