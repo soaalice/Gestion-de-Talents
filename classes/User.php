@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8');
 class User
 {
     private $db;
@@ -325,6 +326,24 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public function getUnreadNotifs($userId)  {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM notifications WHERE idpersonne = :idpersonne AND etat=0 ");
+        $stmt->bindParam(':idpersonne', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
 
+    public function getNotifs($userId) {
+        $stmt = $this->db->prepare("SELECT * FROM notifications WHERE idpersonne = :idpersonne ORDER BY dateheure_at DESC");
+        $stmt->bindParam(':idpersonne', $userId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);   
+    }
+
+    public function updateNotifs($notifId) {
+        $stmt = $this->db->prepare("UPDATE notifications SET etat = 1 WHERE id = :id ");
+        $stmt->bindParam(':id', $notifId, PDO::PARAM_INT);
+        $stmt->execute();
+    }
 
 }   
