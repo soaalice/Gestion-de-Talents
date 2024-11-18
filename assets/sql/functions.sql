@@ -144,6 +144,8 @@ SELECT
     p.id AS id_personne,
     p.nom AS nom_personne,
     j.nom AS nom_job,
+    c.idcv AS id_cv,
+    c.idoffre AS id_offre,
     cv.note_competence AS note_competence,
     cv.note_experience AS note_experience,
     cv.note_education AS note_education,

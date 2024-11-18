@@ -240,7 +240,7 @@ class User
     {
         $stmt = $this->db->prepare("
             SELECT note FROM Evaluation 
-            WHERE idcandidature = :applicationId AND idtype = 1
+            WHERE idcandidature = :applicationId AND idtypeevaluation = 1
         ");
         $stmt->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
         $stmt->execute();
@@ -252,7 +252,7 @@ class User
     {
         $stmt = $this->db->prepare("
             SELECT note FROM Evaluation 
-            WHERE idcandidature = :applicationId AND idtype = 2
+            WHERE idcandidature = :applicationId AND idtypeevaluation = 2
         ");
         $stmt->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
         $stmt->execute();
@@ -376,6 +376,7 @@ class User
             SELECT 
                 id_candidature,
                 nom_personne,
+                id_offre,
                 nom_job,
                 note_competence,
                 note_experience,
@@ -416,5 +417,34 @@ class User
         $stmt->execute([$offre]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getCvById2($id)
+    {
+        // Préparer la requête pour récupérer les informations du CV par ID
+        $stmt = $this->db->prepare("
+            SELECT 
+                id,
+                idpersonne,
+                competence,
+                note_competence,
+                experience,
+                note_experience,
+                education,
+                note_education,
+                remarque,
+                chemin
+            FROM 
+                cv
+            WHERE 
+                id = ?
+        ");
+
+        // Exécuter la requête avec l'ID donné
+        $stmt->execute([$id]);
+
+        // Retourner le résultat sous forme de tableau associatif
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 
 }   

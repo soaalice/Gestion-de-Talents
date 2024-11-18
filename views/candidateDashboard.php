@@ -11,7 +11,7 @@ $userId = $_SESSION['user_id']; // ID du postulant connecté
 $offers = $user->getAvailableOffers($_SESSION['user_cv']);
 
 // Récupérer les candidatures du postulant
-$infos = $user->getCvDashboardInfo($userId);
+$infos = $user->getCvDashboardInfoPerson($userId);
 ?>
 
 <h2>Available Job Offers</h2>
@@ -42,32 +42,86 @@ $infos = $user->getCvDashboardInfo($userId);
 </table>
 
 <h2>My Applications</h2>
-<table border="1" cellspacing="0" cellpadding="5">
+<table border="1">
     <thead>
         <tr>
             <th>ID Candidature</th>
             <th>Nom de la Personne</th>
             <th>Nom du Job</th>
-            <th>Note Compétence</th>
-            <th>Note Expérience</th>
-            <th>Note Éducation</th>
             <th>Moyenne des Notes</th>
             <th>Date de Postulation</th>
-            <th>État</th>
+            <th>Status Candidature</th>
+            <th>Status Test Écrit</th>
+            <th>Status Test Oral</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($infos as $info): ?>
+        <?php foreach ($infos as $application):?>
+        <?php
+            // // Récupération des statuts pour chaque candidature
+            //  $compatibility = $user->getApplicationCompatibility($application['candidature_id']);
+            $writtenTestStatus = $user->getWrittenTestStatus($application['id_candidature']);
+            $oralTestStatus = $user->getOralTestStatus($application['id_candidature']);
+        ?>      
             <tr>
-                <td><?php echo htmlspecialchars($info['id_candidature']); ?></td>
-                <td><?php echo htmlspecialchars($info['nom_personne']); ?></td>
-                <td><?php echo htmlspecialchars($info['nom_job']); ?></td>
-                <td><?php echo htmlspecialchars($info['note_competence']); ?></td>
-                <td><?php echo htmlspecialchars($info['note_experience']); ?></td>
-                <td><?php echo htmlspecialchars($info['note_education']); ?></td>
-                <td><?php echo htmlspecialchars($info['moyenne_notes']); ?></td>
-                <td><?php echo htmlspecialchars($info['datepostule']); ?></td>
-                <td><?php echo $info['etat'] ? 'Acceptée' : 'En attente'; ?></td>
+                <td><?php echo htmlspecialchars($application['id_candidature']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_personne']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_job']); ?></td>
+                <td><?php echo htmlspecialchars($application['moyenne_notes']); ?></td>
+                <td><?php echo htmlspecialchars($application['datepostule']); ?></td>
+                <td>
+                <?php
+                    if ($application['moyenne_notes'] < 2 ) {
+                        echo '<span style="color: red;">Incompatible</span>';
+                    } elseif ($application['moyenne_notes'] > 2 && $application['moyenne_notes'] < 4) {
+                        echo '<span style="color: green;">Compatible</span>';
+                    } else {
+                        echo '<span>Surcompatible</span>';
+                    }
+                    ?>
+                </td>
+
+                <!-- Statut Test Écrit -->
+                <td>
+                    <?php
+                    if ($application['moyenne_notes'] < 2) {
+                        echo 'N/A'; // Si incompatible, pas de test écrit
+                    } elseif ($application['moyenne_notes'] > 2) {
+                        if ($writtenTestStatus) {
+                            $noteWrittenTest = $writtenTestStatus['note'];
+                            $style = $user->getStyleForNote(1, $noteWrittenTest);
+                            echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
+                        } else {
+                            echo '<span>Pas encore évalué</span>';
+                        }
+                    }
+                    ?>
+                </td>
+
+                <!-- Statut Test Oral -->
+                <td>
+                    <?php
+                    if ($application['moyenne_notes'] < 2) {
+                        echo 'N/A'; // Si incompatible, pas de test oral
+                    } elseif ($application['moyenne_notes'] > 2 ) {
+                        if (!$writtenTestStatus) {
+                            echo 'Effectuer Préalablement le Test Écrit';
+                        } else {
+                            if ($oralTestStatus) {
+                                $noteOralTest = $oralTestStatus['note'];
+                                $style = $user->getStyleForNote(2, $noteOralTest);
+                                echo '<span style="' . $style . '">Note: ' . number_format($noteOralTest, 2) . '</span>';
+                            } else {
+                                echo '<span>Pas encore évalué</span>';
+                            }
+                        }
+                    }
+                    ?>
+                </td>
+                <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir
+                            plus</button> </a></td>
+
             </tr>
         <?php endforeach; ?>
     </tbody>
