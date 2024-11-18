@@ -4,11 +4,13 @@ $jobs = $user->getJobs();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $jobId = $_POST['job_id'];
-    $salary = $_POST['salary'];
+    $exigence = $_POST['exigence'];
+    $datelimit = $_POST['date_limit'];
     $dateOffer = $_POST['date_offer'];
     $personId = $_SESSION['user_id']; // Suppose que l'ID de l'utilisateur connecté est stocké en session
 
-    if ($user->createOffer($jobId, $salary, $dateOffer, $personId)) {
+
+    if ($user->createOffer($jobId, $exigence,$datelimit, $dateOffer, $personId)) {
         echo "<div class='alert alert-success text-center mt-4'>Offer successfully created!</div>";
     } else {
         echo "<div class='alert alert-danger text-center mt-4'>Failed to create offer. Please try again.</div>";
@@ -22,6 +24,9 @@ include 'header.php';
         <h2 class="text-center" style="color: #3a6a40;">Create an Offer</h2>
     </div>
 
+
+    
+
     <form method="post" action="index.php?page=offerForm" class="shadow-lg p-4" style="background-color: #f1f8f3; border-radius: 8px;">
         <div class="mb-3">
             <label for="job_id" class="form-label" style="color: #2b7a2b;">Select Job</label>
@@ -32,17 +37,17 @@ include 'header.php';
                     </option>
                 <?php endforeach; ?>
             </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="salary" class="form-label" style="color: #17a2b8;">Salary</label>
-            <input type="number" name="salary" id="salary" step="0.01" class="form-control" required style="background-color: #eaf4e0; border-color: #d0e0d6; color: #3a6a40;">
+          <label>Exigence:</label><br>
+    <textarea type="text" name="exigence" required></textarea><br><br>
         </div>
 
         <div class="mb-3">
             <label for="date_offer" class="form-label" style="color: #2b7a2b;">Date of Offer</label>
             <input type="date" name="date_offer" id="date_offer" class="form-control" required style="background-color: #eaf4e0; border-color: #d0e0d6; color: #3a6a40;">
         </div>
+
+ <label>Date Limit of Offer:</label><br>
+    <input type="date" name="date_limit" required><br><br>
 
         <div class="text-center">
             <input type="submit" value="Create Offer" class="btn btn-warning btn-lg highlight-btn">
@@ -75,3 +80,4 @@ include 'header.php';
         box-shadow: 0 0 5px rgba(56, 189, 94, 0.5); /* Ombre verte douce */
     }
 </style>
+

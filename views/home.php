@@ -7,13 +7,14 @@ if ($user->isAuthentified()) {
     echo "<h1 class='display-2 text-center mt-5 mb-5 welcome-animation' style='color: #3a6a40;'>Welcome!</h1>";
 
     // Affichage de liens spécifiques selon le rôle de l'utilisateur
-    if (strtolower($role) === 'recruteur') {
+
+    if (strtolower($role) === 'admin') {
         echo "<div class='row mt-5'>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=offerForm' class='btn btn-warning btn-lg highlight-btn'>Create an Offer</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=recruiterDashboard' class='btn btn-success btn-lg highlight-btn'>My Offers & Applications</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
-    } elseif (strtolower($role) === 'postulant') {
+    } elseif (strtolower($role) === 'client') {
         echo "<p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-outline-success btn-lg highlight-btn'>Evaluation</a></p>";
         echo "<p class='text-center'><a href='index.php?page=applicationForm' class='btn btn-outline-warning btn-lg highlight-btn'>Apply for an Offer</a></p>";
 
@@ -33,6 +34,7 @@ if ($user->isAuthentified()) {
         } else {
             echo "<p class='text-center'>You have not applied for any job yet.</p>";
         }
+
     }
     echo "</div>";
     echo "</div>";

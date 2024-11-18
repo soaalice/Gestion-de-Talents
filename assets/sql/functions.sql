@@ -136,3 +136,30 @@ CREATE TRIGGER trigger_update_isTaken_offre
 AFTER INSERT OR UPDATE ON Candidature
 FOR EACH ROW
 EXECUTE FUNCTION update_isTaken_offre();
+
+
+CREATE OR REPLACE VIEW v_cv_dashboard AS
+SELECT 
+    c.id AS id_candidature,
+    p.id AS id_personne,
+    p.nom AS nom_personne,
+    j.nom AS nom_job,
+    c.idcv AS id_cv,
+    c.idoffre AS id_offre,
+    o.idpersonne AS id_recruteur,  -- Ajout de l'id du recruteur
+    cv.note_competence AS note_competence,
+    cv.note_experience AS note_experience,
+    cv.note_education AS note_education,
+    ROUND((cv.note_competence + cv.note_experience + cv.note_education) / 3.0, 2) AS moyenne_notes,
+    c.datePostule,
+    c.etat
+FROM 
+    Candidature c
+JOIN 
+    cv ON c.idcv = cv.id
+JOIN 
+    Personne p ON cv.idpersonne = p.id
+JOIN 
+    Offre o ON c.idOffre = o.id
+JOIN 
+    Job j ON o.idJob = j.id;

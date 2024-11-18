@@ -9,7 +9,7 @@ class User
         $this->db = $db->getConnection();
     }
 
-    public function register($name, $email, $password, $phone, $dob, $roleId)
+    public function register($name, $email, $password, $phone, $dob)
     {
         // Hashage du mot de passe avant la sauvegarde
         $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
@@ -18,18 +18,35 @@ class User
         INSERT INTO Personne (nom, email, mdp, phone, datenaissance, idrole)
         VALUES (?, ?, ?, ?, ?, ?)
     ");
-        return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, $roleId]);
+        return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, 2]);
     }
+
+    public function register2($name, $email, $password, $phone, $dob,$idRole)
+    {
+        // Hashage du mot de passe avant la sauvegarde
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        $stmt = $this->db->prepare("
+        INSERT INTO Personne (nom, email, mdp, phone, datenaissance, idrole)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ");
+        return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, $idRole]);
+    }
+
 
 
     public function login($email, $password)
     {
-        $stmt = $this->db->prepare("SELECT * FROM Personne WHERE email = ?");
+        $stmt = $this->db->prepare("SELECT p.id, p.nom , p.email , p.phone , p.datenaissance , p.idrole , p.mdp  , cv.id as idcv
+        FROM Personne p
+        left join cv on cv.idpersonne = p.id
+         WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user && password_verify($password, $user['mdp'])) {
             $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_cv'] = $user['idcv'];
             return true;
         }
         return false;
@@ -80,9 +97,10 @@ class User
     public function getOffers()
     {
         $stmt = $this->db->prepare("
-        SELECT o.id, o.dateOffre, o.salaire, j.nom AS job_name 
+        SELECT o.id, o.dateCreation,o.dateFin, o.exigence, j.nom AS job_name, p.nom as demandeur 
         FROM Offre o
         LEFT JOIN Job j ON o.idjob = j.id
+        LEFT JOIN Personne p ON o.idPersonne = p.id
     ");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -91,10 +109,10 @@ class User
     public function getRecruiterOffers($recruiterId)
     {
         $stmt = $this->db->prepare("
-        SELECT o.id AS offer_id, j.nom AS job_name, o.salaire, o.dateOffre
+        SELECT o.id AS offer_id, j.nom AS job_name, o.dateCreation
         FROM Offre o
         LEFT JOIN Job j ON o.idjob = j.id
-        WHERE o.idpersonne = ? and o.isTaken = false
+        WHERE o.idpersonne = ? 
     ");
         $stmt->execute([$recruiterId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -103,65 +121,72 @@ class User
     public function getRecruiterApplications($recruiterId)
     {
         $stmt = $this->db->prepare("
-        SELECT c.id AS candidature_id, p.nom AS candidate_name, j.nom AS job_name, c.dateCandidature, c.isTaken AS isTaken, o.id as idoffre
+        SELECT c.id AS candidature_id, p.nom AS candidate_name, j.nom AS job_name, c.datePostule, o.id as idoffre
         FROM Candidature c
-        JOIN Personne p ON c.idpersonne = p.id
+        JOIN cv ON cv.id = c.idcv
+        JOIN Personne p ON cv.idpersonne = p.id
         JOIN Offre o ON c.idOffre = o.id
         LEFT JOIN Job j ON o.idjob = j.id
-        WHERE o.idpersonne = ? and o.isTaken = false
+        WHERE o.idpersonne = ? 
     ");
         $stmt->execute([$recruiterId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAvailableOffers()
+    public function getAvailableOffers($usercv)
     {
         $stmt = $this->db->prepare("
-        SELECT o.id AS offer_id, j.nom AS job_name, o.salaire, o.dateOffre
+        SELECT o.id AS offer_id, j.nom AS job_name, o.dateCreation,o.dateFin
         FROM Offre o
-        LEFT JOIN Job j ON o.idjob = j.id where o.isTaken = false
+        LEFT JOIN Job j ON o.idjob = j.id 
+        where o.id not in (select idoffre from candidature 
+        where idcv = ?)
     ");
-        $stmt->execute();
+        $stmt->execute([$usercv]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getUserApplications($userId)
     {
         $stmt = $this->db->prepare("
-        SELECT c.id AS candidature_id, j.nom AS job_name, c.dateCandidature, o.id as idoffre
-        FROM Candidature c
-        JOIN Offre o ON c.idOffre = o.id
+        SELECT  o.id, o.dateCreation,o.dateFin, o.exigence, j.nom AS job_name, p.nom as demandeur 
+        FROM Offre o
+        Left join Personne p on o.idPersonne = p.id
         LEFT JOIN Job j ON o.idjob = j.id
-        WHERE c.idpersonne = ? and o.isTaken = false
+        WHERE o.id in (select idOffre 
+        from candidature c 
+        Left join cv on cv.id = c.idcv
+        WHERE cv.idpersonne = ?) 
     ");
         $stmt->execute([$userId]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
-    public function getUserApplicationsForProfile($userId)
+    public function isApplying($userId,$offreid)
     {
-        // Récupérer les offres pour lesquelles l'utilisateur a postulé
         $stmt = $this->db->prepare("
-        SELECT o.id AS offer_id, j.nom AS job_name, o.salaire, o.dateOffre
-        FROM Candidature c
-        JOIN Offre o ON c.idOffre = o.id
+        SELECT  o.id, o.dateCreation,o.dateFin, o.exigence, j.nom AS job_name, p.nom as demandeur 
+        FROM Offre o
+        Left join Personne p on o.idPersonne = p.id
         LEFT JOIN Job j ON o.idjob = j.id
-        WHERE c.idpersonne = ? and o.isTaken = false
+        WHERE o.id in (select idOffre 
+        from candidature c 
+        Left join cv on cv.id = c.idcv
+        WHERE cv.idpersonne = ?) and 
+        o.id = ?
     ");
-        $stmt->execute([$userId]);
+        $stmt->execute([$userId,$offreid]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
-
-    public function createOffer($jobId, $salary, $dateOffer, $personId)
+    public function createOffer($jobId, $exigence,$datelimit, $dateOffer, $personId)
     {
         // Insertion d'une offre dans la base de données
         $stmt = $this->db->prepare("
-        INSERT INTO Offre (idpersonne, idjob, dateoffre, salaire)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO Offre (idpersonne, idjob, dateCreation, dateFin, exigence)
+        VALUES (?, ?, ?, ?, ?)
     ");
-        return $stmt->execute([$personId, $jobId, $dateOffer, $salary]);
+        return $stmt->execute([$personId, $jobId, $dateOffer,$datelimit, $exigence]);
     }
 
 
@@ -169,66 +194,38 @@ class User
     {
         // Insertion d'une candidature dans la base de données
         $stmt = $this->db->prepare("
-        INSERT INTO Candidature (idpersonne, idoffre, datecandidature)
-        VALUES (?, ?, ?)
+      INSERT INTO Candidature (idcv, idOffre, datePostule, etat)
+        VALUES (?, ?, ?,?)
     ");
-        return $stmt->execute([$personId, $offerId, $applicationDate]);
-    }
-
-    public function getTypeChamps()
-    {
-        $stmt = $this->db->prepare("SELECT id, nom FROM TypeChamp");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Méthode pour récupérer tous les requis avec leur type de champ
-    public function getRequis()
-    {
-        $stmt = $this->db->prepare("SELECT r.id, r.nom, tc.nom AS type_name
-                                FROM Requis r
-                                LEFT JOIN TypeChamp tc ON r.idtypechamp = tc.id");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->execute([$personId, $offerId, $applicationDate,'FALSE']);
     }
 
 
-    public function createRequisOffre($offerId, $requisId, $minimum, $maximum)
-    {
-        $stmt = $this->db->prepare("
-        INSERT INTO RequisOffre (idoffre, idrequis, minimum, maximum)
-        VALUES (?, ?, ?, ?)
-    ");
-        return $stmt->execute([$offerId, $requisId, $minimum, $maximum]);
-    }
-
-    // Récupérer les requis associés à une offre
-    public function getRequisForOffer($offerId)
-    {
-        $stmt = $this->db->prepare("SELECT r.id, r.nom, tc.nom AS type_name
-                                FROM Requis r
-                                LEFT JOIN TypeChamp tc ON r.idtypechamp = tc.id
-                                JOIN RequisOffre ro ON r.id = ro.idrequis
-                                WHERE ro.idoffre = ?");
-        $stmt->execute([$offerId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Insérer les données du profil dans la table Profile
-    public function createProfile($userId, $requisId, $value)
-    {
-        $stmt = $this->db->prepare("
-        INSERT INTO Profile (idpersonne, idrequis, valeur)
-        VALUES (?, ?, ?)
-        ON CONFLICT (idpersonne, idrequis) DO UPDATE SET valeur = ?
-    ");
-        try {
-            return $stmt->execute([$userId, $requisId, $value, $value]);
-        } catch (PDOException $e) {
-            // Log error or display a message
-            echo "Error: " . $e->getMessage();
+    public function createORreplaceCV($com, $exp, $ed,$id,$cv){
+        if(isset($cv) || !empty($cv)){
+            $stmt = $this->db->prepare("
+            UPDATE cv set competence = ? , experience = ? , education = ?
+            where idpersonne = ?
+            ");
+            return $stmt->execute([ $com, $exp,$ed,$id]);
+        }else{
+            $stmt = $this->db->prepare("
+            INSERT INTO cv (idpersonne, competence, experience, education)
+            VALUES (?, ?, ?,?)
+            ");
+            return $stmt->execute([$id, $com, $exp,$ed]);
         }
+    } 
+
+    public function getCVbyId($id) {
+        $stmt = $this->db->prepare("
+        SELECT * FROM cv 
+        WHERE idpersonne = ?
+    ");
+    $stmt->execute([$id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     // Fonction pour récupérer la compatibilité d'une candidature
     public function getApplicationCompatibility($applicationId)
@@ -244,7 +241,7 @@ class User
     {
         $stmt = $this->db->prepare("
             SELECT note FROM Evaluation 
-            WHERE idcandidature = :applicationId AND idtype = 1
+            WHERE idcandidature = :applicationId AND idtypeevaluation = 1
         ");
         $stmt->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
         $stmt->execute();
@@ -256,7 +253,7 @@ class User
     {
         $stmt = $this->db->prepare("
             SELECT note FROM Evaluation 
-            WHERE idcandidature = :applicationId AND idtype = 2
+            WHERE idcandidature = :applicationId AND idtypeevaluation = 2
         ");
         $stmt->bindParam(':applicationId', $applicationId, PDO::PARAM_INT);
         $stmt->execute();
@@ -300,31 +297,181 @@ class User
     }
 
 
-    // détalis
-
-    public function getRequisOffre($idOffre)
+    public function getOffreById($idOffre)
     {
         $stmt = $this->db->prepare("
-            SELECT r.nom, ro.minimum, ro.maximum
-            FROM requisoffre ro
-            JOIN requis r ON r.id = ro.idrequis
-            WHERE ro.idoffre = ?
-        ");
-        $stmt->execute([$idOffre]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function getOffreByJobId($idOffre)
-    {
-        $stmt = $this->db->prepare("
-            SELECT j.nom, of.dateOffre, of.salaire
+            SELECT of.id, of.dateCreation,of.dateFin, of.exigence, j.nom AS job_name, p.nom as demandeur 
             FROM offre of
             JOIN job j ON j.id = of.idjob
+            JOIN Personne p ON p.id = of.idPersonne
             WHERE of.id = ?
         ");
         $stmt->execute([$idOffre]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getPersonneIdByCandidatureId($idCandidature)
+    {
+        $query = "SELECT idpersonne FROM Candidature WHERE id = :idCandidature";
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':idCandidature', $idCandidature, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchColumn();  // Renvoie l'ID de la personne
+    }
+
+
+    // Modif Fanah
+
+    public function getExigenceByOffre($idOffre)
+    {
+        // Préparer la requête SQL
+        $stmt = $this->db->prepare("
+            SELECT exigence
+            FROM Offre
+            WHERE id = :id_offre
+        ");
+
+        // Exécuter la requête avec le paramètre
+        $stmt->execute([':id_offre' => $idOffre]);
+
+        // Récupérer le résultat
+        return $stmt->fetchColumn();
+    }
+
+    public function saveCV($idPersonne, $education, $noteEducation, $experience, $noteExperience, $competence, $noteCompetence, $remarque, $chemin)
+    {
+        echo "début save";
+        // Préparer la requête d'insertion
+        $stmt = $this->db->prepare("
+            INSERT INTO cv (idpersonne, education, note_education, experience, note_experience, competence, note_competence, remarque, chemin)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        // Exécuter la requête avec les données
+        if ($stmt->execute([
+            $idPersonne,
+            $education,
+            $noteEducation,
+            $experience,
+            $noteExperience,
+            $competence,
+            $noteCompetence,
+            $remarque,
+            $chemin
+        ])) {
+            // Retourner l'identifiant du dernier CV inséré
+            return $this->db->lastInsertId();
+            echo "fin save. Done!";
+        }
+        echo "Echec";
+        // En cas d'échec, retourner false
+        return false;
+    }
+
+
+    public function getCvDashboardInfoPerson($idperson)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                id_offre,
+                nom_job,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_personne = ?
+        ");
+
+        $stmt->execute([$idperson]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getCvDashboardInfoOffre($offre)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                nom_job,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_offre = ?
+        ");
+
+        $stmt->execute([$offre]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCvById2($id)
+    {
+        // Préparer la requête pour récupérer les informations du CV par ID
+        $stmt = $this->db->prepare("
+            SELECT 
+                id,
+                idpersonne,
+                competence,
+                note_competence,
+                experience,
+                note_experience,
+                education,
+                note_education,
+                remarque,
+                chemin
+            FROM 
+                cv
+            WHERE 
+                id = ?
+        ");
+
+        // Exécuter la requête avec l'ID donné
+        $stmt->execute([$id]);
+
+        // Retourner le résultat sous forme de tableau associatif
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getCvDashboardInfoOffreRecruter($idrecruteur)
+    {
+
+        $stmt = $this->db->prepare("
+            SELECT 
+                id_candidature,
+                nom_personne,
+                nom_job,
+                id_offre,
+                note_competence,
+                note_experience,
+                note_education,
+                moyenne_notes,
+                datePostule,
+                etat
+            FROM 
+                v_cv_dashboard
+            WHERE 
+                id_recruteur = ?
+        ");
+
+        $stmt->execute([$idrecruteur]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     public function getUnreadNotifs($userId)  {
         $stmt = $this->db->prepare("SELECT COUNT(*) FROM notifications WHERE idpersonne = :idpersonne AND etat=0 ");
@@ -338,6 +485,7 @@ class User
         $stmt->bindParam(':idpersonne', $userId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);   
+
     }
 
     public function updateNotifs($notifId) {

@@ -34,8 +34,14 @@ switch ($page) {
     case 'applicationForm':
         include 'views/applicationForm.php';
         break;
-    case 'requisOffreForm':
-        include 'views/requisOffreForm.php';
+    case 'applicationList':
+        include 'views/applicationList.php';
+        break;
+    case 'application':
+        include 'views/application.php';
+        break;
+    case 'creationCV':
+        include 'views/creationCV.php';
         break;
     case 'profileForm':
         include 'views/profileForm.php';
@@ -53,7 +59,7 @@ switch ($page) {
         include 'views/candidateDashboard.php';
         break;
     case 'detailOffre':
-        include 'views/offreDetails.php';
+        include 'views/detailsOffre.php';
         break;
     case 'notifications':
         include 'views/notifications.php';

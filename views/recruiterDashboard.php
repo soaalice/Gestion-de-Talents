@@ -1,6 +1,7 @@
 <?php
+include 'header.php';
 // Vérifier si l'utilisateur est authentifié et est un recruteur
-if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'recruteur') {
+if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
     header('Location: index.php?page=login');
     exit;
 }
@@ -11,45 +12,40 @@ $recruiterId = $_SESSION['user_id']; // ID du recruteur connecté
 $offers = $user->getRecruiterOffers($recruiterId);
 
 // Récupérer les candidatures pour ces offres
-$applications = $user->getRecruiterApplications($recruiterId);
 
-include 'header.php';
+$applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
 ?>
-
-<div class="container mt-5 mb-5 pb-5">
-    <div>
-
-        <div class="m-3 mb-4">
+<div class="container mb-5 mt-5 pb-5">
+  <div>
+     <div class="m-3 mb-4">
             <h2 class="text-center" style="color: #3a6a40;">My Job Offers</h2>
         </div>
 
         <!-- Tableau des offres -->
         <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
             <thead style="background-color: #a8d5a2; color: #2b7a2b;">
-                <tr>
-                    <th>Offer ID</th>
-                    <th>Job Name</th>
-                    <th>Salary</th>
-                    <th>Offer Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($offers as $offer): ?>
-                    <tr style="background-color: #ffffff;">
-                        <td><?= htmlspecialchars($offer['offer_id']) ?></td>
-                        <td><?= htmlspecialchars($offer['job_name']) ?></td>
-                        <td><?= htmlspecialchars($offer['salaire']) ?> €</td>
-                        <td><?= htmlspecialchars($offer['dateoffre']) ?></td>
-                        <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($offer['offer_id']) ?>"><button
-                                    class="btn btn-outline-success">Voir plus</button></a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+        <tr>
+            <th>Offer ID</th>
+            <th>Job Name</th>
+            <th>Offer Date</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($offers as $offer): ?>
+            <tr>
+                <td><?= htmlspecialchars($offer['offer_id']) ?></td>
+                <td><?= htmlspecialchars($offer['job_name']) ?></td>
+                <td><?= htmlspecialchars($offer['datecreation']) ?></td>
+                <td><a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($offer['offer_id']) ?>"><button>Voir plus</button> </a></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
     </div>
+  
 
-    <div class="mt-5">
+<div class="mt-5">
 
         <div class="m-3 mb-4">
             <h2 class="text-center" style="color: #3a6a40;">Applications for My Offers</h2>
@@ -58,83 +54,91 @@ include 'header.php';
         <!-- Tableau des candidatures -->
         <table class="table table-bordered shadow-lg" style="background-color: #ffffff;">
             <thead style="background-color: #a8d5a2; color: #2b7a2b;">
-                <tr>
-                    <th>Application ID</th>
-                    <th>Candidate Name</th>
-                    <th>Job Name</th>
-                    <th>Application Date</th>
-                    <th>Status Candidature</th>
-                    <th>Status Test Écrit</th>
-                    <th>Status Test Oral</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($applications as $application):
-                    $compatibility = $user->getApplicationCompatibility($application['candidature_id']);
-                    $writtenTestStatus = $user->getWrittenTestStatus($application['candidature_id']);
-                    $oralTestStatus = $user->getOralTestStatus($application['candidature_id']);
+        <tr>
+            <th>ID Candidature</th>
+            <th>Nom de la Personne</th>
+            <th>Nom du Job</th>
+            <th>Moyenne des Notes</th>
+            <th>Date de Postulation</th>
+            <th>Status Candidature</th>
+            <th>Status Test Écrit</th>
+            <th>Status Test Oral</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($applications as $application):
+            $writtenTestStatus = $user->getWrittenTestStatus($application['id_candidature']);
+            $oralTestStatus = $user->getOralTestStatus($application['id_candidature']);
+        ?>
+            <tr>
+                <td><?php echo htmlspecialchars($application['id_candidature']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_personne']); ?></td>
+                <td><?php echo htmlspecialchars($application['nom_job']); ?></td>
+                <td><?php echo htmlspecialchars($application['moyenne_notes']); ?></td>
+                <td><?php echo htmlspecialchars($application['datepostule']); ?></td>
+                <!-- Statut Candidature -->
+                <td>
+                    <?php
+                    if ($application['moyenne_notes'] < 2 ) {
+                        echo '<span style="color: red;">Incompatible</span>';
+                    } elseif ($application['moyenne_notes'] > 2 && $application['moyenne_notes'] < 4) {
+                        echo '<span style="color: green;">Compatible</span>';
+                    } else {
+                        echo '<span>Surcompatible</span>';
+                    }
                     ?>
-                    <tr style="background-color: #ffffff;">
-                        <td><?= htmlspecialchars($application['candidature_id']) ?></td>
-                        <td><?= htmlspecialchars($application['candidate_name']) ?></td>
-                        <td><?= htmlspecialchars($application['job_name']) ?></td>
-                        <td><?= htmlspecialchars($application['datecandidature']) ?></td>
-                        <td>
-                            <?php
-                            if ($compatibility == 1) {
-                                echo '<span style="color: red;">Incompatible</span>';
-                            } elseif ($compatibility == 2) {
-                                echo '<span style="color: green;">Compatible</span>';
+                </td>
+                
+                <!-- Statut Test Écrit -->
+                <td>
+                    <?php
+                    if ($application['moyenne_notes'] < 2) {
+                        echo 'N/A'; // Si incompatible, pas de test écrit
+                    } elseif ($application['moyenne_notes']  > 2) {
+                        if ($writtenTestStatus) {
+                            // echo 'Note: ' . number_format($writtenTestStatus['note'], 2); // Affiche la note du test écrit
+                            $noteWrittenTest = $writtenTestStatus['note'];
+                            $style = $user->getStyleForNote(1, $noteWrittenTest);
+                            echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
+                        } else {
+                            echo '<a href="index.php?page=writtenTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
+                        }
+                    }
+                    ?>
+                </td>
+                
+                <!-- Statut Test Oral -->
+                <td>
+                    <?php
+                    if ($application['moyenne_notes'] < 2) {
+                        echo 'N/A'; // Si incompatible, pas de test oral
+                    } elseif ($application['moyenne_notes'] > 2) {
+                        if (!$writtenTestStatus) {
+                            echo 'Effectuer Préalablement le Test Écrit';
+                        } else {
+                            if ($oralTestStatus) {
+                                // echo 'Note: ' . number_format($oralTestStatus['note'], 2); // Affiche la note du test oral
+                                $noteWrittenTest = $oralTestStatus['note'];
+                                $style = $user->getStyleForNote(2, $noteWrittenTest);
+                                echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
                             } else {
-                                echo '<span style="color: #1c7c54;">Surcompatible</span>';
+                                echo '<a href="index.php?page=oralTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
                             }
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            if ($compatibility == 1) {
-                                echo 'N/A'; // Si incompatible, pas de test écrit
-                            } elseif ($compatibility == 2 || $compatibility == 3) {
-                                if ($writtenTestStatus) {
-                                    $noteWrittenTest = $writtenTestStatus['note'];
-                                    $style = $user->getStyleForNote(1, $noteWrittenTest);
-                                    echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
-                                } else {
-                                    echo '<a href="index.php?page=writtenTestForm&applicationId=' . $application['candidature_id'] . '" class="btn btn-outline-success">Évaluer</a>';
-                                }
-                            }
-                            ?>
-                        </td>
-                        <td>
-                            <?php
-                            if ($compatibility == 1) {
-                                echo 'N/A';
-                            } elseif ($compatibility == 2 || $compatibility == 3) {
-                                if (!$writtenTestStatus) {
-                                    echo 'Effectuer Préalablement le Test Écrit';
-                                } else {
-                                    if ($oralTestStatus) {
-                                        $noteWrittenTest = $oralTestStatus['note'];
-                                        $style = $user->getStyleForNote(2, $noteWrittenTest);
-                                        echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
-                                    } else {
-                                        echo '<a href="index.php?page=oralTestForm&applicationId=' . $application['candidature_id'] . '" class="btn btn-outline-success">Évaluer</a>';
-                                    }
-                                }
-                            }
-                            ?>
-                        </td>
-                        <td><a
-                                href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['idoffre']) ?>&&idcandidat=<?= htmlspecialchars($application['candidature_id']) ?>"><button
-                                    class="btn btn-outline-primary">Voir+</button></a></td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                        }
+                    } else {
+                        echo 'Surcompatible';
+                    }
+                    ?>
+                </td>
+                <!-- <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td> -->
+                <td><a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td>
+            </tr>
+        <?php endforeach; ?>
+    </tbody>
+</table>
+  </div>
 </div>
-
 <!-- CSS personnalisé pour le thème nature et écologie -->
 <style>
     .table-bordered {

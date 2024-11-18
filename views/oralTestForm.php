@@ -1,6 +1,6 @@
 <?php
 // Vérification que l'utilisateur est authentifié et est un recruteur
-if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'recruteur') {
+if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
     header('Location: index.php?page=login');
     exit;
 }
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier si la note a déjà été attribuée pour ce test oral
     $stmt = $db->getConnection()->prepare("
         SELECT id FROM Evaluation 
-        WHERE idcandidature = ? AND idtype = 2
+        WHERE idcandidature = ? AND idtypeevaluation = 2
     ");
     $stmt->execute([$applicationId]);
     $existingNote = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -23,14 +23,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $updateStmt = $db->getConnection()->prepare("
             UPDATE Evaluation 
             SET note = ? 
-            WHERE idcandidature = ? AND idtype = 2
+            WHERE idcandidature = ? AND idtypeevaluation = 2
         ");
         $updateStmt->execute([$note, $applicationId]);
     } else {
         // Sinon, insérer une nouvelle évaluation pour ce test oral
         $insertStmt = $db->getConnection()->prepare("
-            INSERT INTO Evaluation (note, idcandidature, idtype)
-            VALUES (?, ?, 2)
+            INSERT INTO Evaluation (note, idcandidature, idtypeevaluation, dateevaluation)
+        VALUES (?, ?, 2,now())
         ");
         $insertStmt->execute([$note, $applicationId]);
     }

@@ -5,9 +5,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $phone = $_POST['phone'] ?? null;
     $dob = $_POST['dob'];
-    $roleId = $_POST['role']; // Récupération de l'ID du rôle
+    $idrole = $_POST['roles'];
 
-    if ($user->register($name, $email, $password, $phone, $dob, $roleId)) {
+    if ($user->register2($name, $email, $password, $phone, $dob,$idrole)) {
         $user->login($email, $password); // Connexion automatique après l'inscription
         header('Location: index.php');
         exit;
@@ -15,6 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<p class='text-danger text-center'>Registration failed. Email may already be in use.</p>";
     }
 }
+
+ // Récupérer les rôles à afficher dans le formulaire
+ $roles = $user->getRoles();
+
+?>
 
 // Récupérer les rôles à afficher dans le formulaire
 include 'header.php';
@@ -30,6 +35,7 @@ $roles = $user->getRoles();
                     <label for="name" class="form-label" style="font-weight: bold; color: #3a6a40;">Name:</label>
                     <input type="text" name="name" class="form-control" id="name" style="border-radius: 10px; border: 1px solid #6fa37d;" required>
                 </div>
+
 
                 <div class="mb-3">
                     <label for="email" class="form-label" style="font-weight: bold; color: #3a6a40;">Email:</label>
@@ -60,8 +66,10 @@ $roles = $user->getRoles();
                     </select>
                 </div>
 
+
                 <button type="submit" class="btn btn-success btn-lg w-100" style="border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background-color: #6fa37d; border: none;">Register</button>
             </form>
+
 
             <div class="text-center mt-3">
                 <a href="index.php?page=login" class="btn btn-link" style="color: #3a6a40;">Already have an account? Login</a>
