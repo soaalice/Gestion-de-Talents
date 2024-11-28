@@ -64,6 +64,12 @@ switch ($page) {
     case 'quest':
         include 'views/quest.php';
         break;
+    case 'conge':
+        include 'views/conge.php';
+        break;
+    case 'rupture':
+        include 'views/rupture.php';
+        break;
     case 'logout':
         $user->logout();
         header('Location: index.php');
