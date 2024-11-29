@@ -50,7 +50,9 @@ header('Content-Type: text/html; charset=UTF-8');
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.php?page=logout" style="color: #d2f1d4;">Logout</a>
+                            <a class="nav-link" href="index.php?page=logout">
+                                <i class="fas fa-door-open"></i>
+                            </a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
