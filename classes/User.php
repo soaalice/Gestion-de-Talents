@@ -558,14 +558,16 @@ class User
         $stmt->bindParam(':idpersonne', $iddestinataire, PDO::PARAM_INT);
       return  $stmt->execute();
     }
-    public function createContract($date_debut,$date_fin,$employe_id,$employeur_id){
-        $query = "INSERT INTO Contrat (date_debut, date_fin, statut_id, employe_id, employeur_id) 
-        VALUES (:date_debut, :date_fin, :statut_id, :employe_id, :employeur_id)";
+    public function createContract($date_debut,$date_fin,$salaire,$candidature,$employe_id,$employeur_id){
+        $query = "INSERT INTO Contrat (date_debut, date_fin,salaire, statut_id,candidature_id, employe_id, employeur_id) 
+        VALUES (:date_debut, :date_fin,:salaire, :statut_id,:candidature, :employe_id, :employeur_id)";
         $statut = Constante::id_actif();
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':date_debut', $date_debut);
         $stmt->bindParam(':date_fin', $date_fin);
+        $stmt->bindParam(':salaire', $salaire);
         $stmt->bindParam(':statut_id',$statut);
+        $stmt->bindParam(':candidature',$candidature);
         $stmt->bindParam(':employe_id', $employe_id);
         $stmt->bindParam(':employeur_id', $employeur_id);
         $this->insertNotifs("Vous avez un nouveau contrat.",$employe_id);
@@ -574,12 +576,14 @@ class User
 
     public function getMyContract($user){
         $stmt = $this->db->prepare("
-           Select * from contrat
+           Select date_debut,date_fin,salaire,p.nom from contrat c
+           left join personne p
+           on p.id = c.employeur_id
            where employe_id = ?
-           and statut_id = 1
+           and statut_id = ?
         ");
 
-        $stmt->execute([$user]);
+        $stmt->execute([$user,Constante::id_actif()]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     public function createRupture($date,$idcontract,$type){
@@ -638,22 +642,91 @@ class User
     }
     public function getEmployesPreavis($id){
         $stmt = $this->db->prepare("
-        Select p.nom,c.id,c.employe_id from contrat c
+        Select p.nom,pr.id as preavis_id,c.employe_id,c.salaire
+         from  preavis pr
+        left join ruptureContrat r
+        on pr.rupture_id = r.id
+        left join contrat c
+        on c.id = r.contrat_id
         left join personne p
         on p.id = c.employe_id
         where c.employeur_id = ?
         and c.statut_id = ?
-        and c.id in (
-        select r.contrat_id
-        from  preavis pr
-        left join ruptureContrat r
-        on pr.rupture_id = r.id
-        where pr.statut_preavis_id = ?
-        )
+        and pr.statut_preavis_id = ?
         
      ");
 
      $stmt->execute([$id,Constante::id_resilie(),Constante::id_en_cours()]);
+     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getEmployesPreavisIndemnite($id){
+        $stmt = $this->db->prepare("
+         Select p.nom,pr.id as preavis_id,c.employe_id
+         from IndemnitePreavis ip
+         left join preavis pr
+         on pr.id = ip.preavis_id
+        left join ruptureContrat r
+        on pr.rupture_id = r.id
+        left join contrat c
+        on c.id = r.contrat_id
+        left join personne p
+        on p.id = c.employe_id
+        where c.employeur_id = ?
+        and c.statut_id = ?
+        and pr.statut_preavis_id = ?
+        and ip.statut_paiement_id = ?
+        
+     ");
+
+     $stmt->execute([$id,Constante::id_resilie(),Constante::id_non_respecter(),Constante::id_en_attente()]);
+     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function updatePreavis($preavis_id,$statut){
+        $stmt = $this->db->prepare("
+        UPDATE Preavis
+        SET statut_preavis_id = ?
+        WHERE id = ?
+    ");
+        return $stmt->execute([$statut, $preavis_id]);
+    }
+
+    public function createIndemnite($preavis_id,$statut,$salaire,$emp){
+        $this->updatePreavis($preavis_id,Constante::id_non_respecter());
+        $stmt = $this->db->prepare("
+        INSERT INTO IndemnitePreavis (preavis_id, montant, date_paiement, statut_paiement_id)
+VALUES (?, ?, NULL, ?); 
+    ");
+    $this->insertNotifs("Vous n'avez pas respecte le preavis , veuillez payer l'indemnite qui s'eleve a ".$salaire." MGA",$emp);
+    return $stmt->execute([$preavis_id, $salaire,Constante::id_en_attente()]);
+}
+    public function updateIndemnite($id,$date,$idemp){
+        $stmt = $this->db->prepare("
+        UPDATE IndemnitePreavis
+        SET date_paiement = ?,
+        statut_paiement_id = ? 
+        WHERE id = ?
+        ");
+        $this->insertNotifs("L'indemnite a ete paye en totalite le ".$date.".",$idemp);
+        return $stmt->execute([$date, Constante::id_regle(),$id]);
+    }
+    public function getIndemnite($id){
+        $stmt = $this->db->prepare("
+          Select ip.montant,ip.id,c.employeur_id
+         from IndemnitePreavis ip
+         left join preavis pr
+         on pr.id = ip.preavis_id
+        left join ruptureContrat r
+        on pr.rupture_id = r.id
+        left join contrat c
+        on c.id = r.contrat_id
+        where c.employe_id = ?
+        and c.statut_id = ?
+        and pr.statut_preavis_id = ?
+        and ip.statut_paiement_id = ?
+     ");
+
+     $stmt->execute([$id,Constante::id_resilie(),Constante::id_non_respecter(),Constante::id_en_attente()]);
      return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }   

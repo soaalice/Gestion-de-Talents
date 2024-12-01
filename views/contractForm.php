@@ -1,12 +1,14 @@
 <?php
 $idcandidat = $_GET['idcandidat'];
+$idcandidature = $_GET['idcandidature'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $date_debut = $_POST['date_debut'];
     $date_fin = $_POST['date_fin'];
+    $salaire = $_POST['salaire'];
     $personId = $_SESSION['user_id']; 
 
 
-    if ($user->createContract($date_debut, $date_fin, $idcandidat, $personId)) {
+    if ($user->createContract($date_debut, $date_fin,$salaire,$candidature, $idcandidat, $personId)) {
         echo "<div class='alert alert-success text-center mt-4'>Offer successfully created!</div>";
         header('location:index.php?page=recruiterDashboard');
     } else {
@@ -30,6 +32,9 @@ include('header.php');
 
         <label for="date_fin">Date de fin :</label>
         <input type="date" id="date_fin" name="date_fin"><br><br>
+        
+        <label for="date_fin">Salaire :</label>
+        <input type="date" id="salaire" name="salaire"><br><br>
 
         <button type="submit">Créer le Contrat</button>
     </form>

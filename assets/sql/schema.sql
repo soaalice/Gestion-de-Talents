@@ -148,11 +148,11 @@ CREATE TABLE Contrat (
     id SERIAL PRIMARY KEY,
     date_debut DATE NOT NULL,
     date_fin DATE,
+    salaire Decimal(11,2) not null,
     statut_id INT NOT NULL REFERENCES Statut(id),
     candidature_id INT NOT NULL REFERENCES candidature(id),
     employe_id INT NOT NULL REFERENCES personne(id), 
-    employeur_id INT NOT NULL REFERENCES personne(id),
-    salaire Decimal(11,2) not null
+    employeur_id INT NOT NULL REFERENCES personne(id)
 );
 
 -- Table: RuptureContrat

@@ -135,7 +135,7 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
                 </td>
                 <!-- <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td> -->
                 <?php if ($oralTestStatus) { ?>
-                    <td><a href="index.php?page=contractForm&&idcandidat=<?= htmlspecialchars($application['id_personne']) ?>"><button>Offrir un contrat</button> </a></td>
+                    <td><a href="index.php?page=contractForm&idcandidature=<?= htmlspecialchars($application['id_candidature']) ?>&idcandidat=<?= htmlspecialchars($application['id_personne']) ?>"><button>Offrir un contrat</button> </a></td>
                     <?php } ?>
             </tr>
             
