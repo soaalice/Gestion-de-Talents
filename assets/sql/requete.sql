@@ -111,3 +111,17 @@ LEFT JOIN
 WHERE 
     c.idpersonne = 3 and c.idoffre = 2 -- Remplacez <ID_PERSONNE> par l'identifiant de la personne
     AND c.isTaken = FALSE; -- Filtre sur les candidatures non prises (si nécessaire)
+
+
+
+-------------------------------------------------------------------------------
+
+SELECT 
+    employe_id,
+    DATE_TRUNC('week', date) AS semaine, -- Début de la semaine
+    SUM(heures_travail) AS total_heures_supplementaires -- Total des heures par semaine
+FROM HeuresSupplementaires
+WHERE employe_id = 1 -- Remplacez 1 par l'ID de l'employé
+  AND DATE_TRUNC('month', date) = '2024-11-01' -- Mois de novembre 2024
+GROUP BY employe_id, DATE_TRUNC('week', date)
+ORDER BY semaine;
