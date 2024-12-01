@@ -1,15 +1,41 @@
 <?php 
 
-    // pourcentage heure sup
-    const HEURE_SUP_8_FIRST = 30;
-    const HEURE_SUP_12_LAST = 40;
+    // heure sup multiplicateur
+    const HEURE_SUP_8_FIRST = 1.3;
+    const HEURE_SUP_12_LAST = 1.4;
 
-    const HEURE_DIMANCHE = 50;
-    const JOUR_FERIE = 100;
+    const HEURE_DIMANCHE = 1.5;
+    const JOUR_FERIE = 2;
 
-    const HEURE_NUIT = 30;
+    const HEURE_NUIT = 1.3;
+
+    
+    function salaireHeureSup_8_FIRST($tauxHoraire,$heureSup){
+        return $tauxHoraire * HEURE_SUP_8_FIRST * $heureSup;
+    }
+
+    function salaireHeureSup_12_LAST($tauxHoraire,$heureSup){
+        return $tauxHoraire * HEURE_SUP_12_LAST * $heureSup;
+    }
+
+    function salaireHeureSup_DIMANCHE($tauxHoraire,$heureSup){
+        return $tauxHoraire * HEURE_DIMANCHE * $heureSup;
+    }
+
+    function salaireHeureSup_FERIE($tauxHoraire,$heureSup){
+        return $tauxHoraire * JOUR_FERIE * $heureSup;
+    }
+
+    function salaireHeure_NUIT($tauxHoraire,$heureSup){
+        return $tauxHoraire * HEURE_NUIT * $heureSup;
+    }
 
     // IRSA
+
+    const IRSA_350k_400k_STR =  5;
+    const IRSA_400k_500k_STR = 10;
+    const IRSA_500k_600k_STR = 15;
+    const IRSA_SUP_600k_STR = 20;
 
     const IRSA_350k_400k = (50000 * 5)/100;
     const IRSA_400k_500k = (100000 * 10)/100;
@@ -19,8 +45,25 @@
         return (($vola - 600000)*20)/100;
     }
 
-    // Retenue salariale
 
+    function calculIRSA($salaireBrut){
+        $irsa = 0;
+
+        if($salaireBrut <= 350000) return $irsa;
+        // Tranche 350k-400k
+        if ($salaireBrut > 350000)  $irsa += IRSA_350k_400k;
+        // Tranche 400k-500k
+        if ($salaireBrut > 400000)  $irsa += IRSA_400k_500k;
+        // Tranche 500k-600k
+        if ($salaireBrut > 500000)  $irsa += IRSA_500k_600k;
+        // Tranche > 600k
+        if ($salaireBrut > 600000) $irsa += IRSA_SUP_600k($salaireBrut);
+
+        return $irsa;
+    }
+
+
+    // Retenue salariale
     function RETENUE_CNAPS($salaireBrut){
         $retenueCnaps = $salaireBrut/100;
         if($retenueCnaps > 20000) return 20000;
@@ -30,5 +73,12 @@
     function RETENUE_SANITAIRE($salaireBrut){
         return $salaireBrut/100;
     }
+
+    // absence
+    function Abscence_Deductible($tauxHoraire, $heure){
+        return ($tauxHoraire * $heure) * -1;
+    }
+
+
 
 ?>

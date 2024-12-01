@@ -93,67 +93,6 @@ CREATE TABLE notifications (
 );
 
 
-
--- Heure sup
-CREATE TABLE HeuresSupplementaires (
-    id SERIAL PRIMARY KEY,
-    employe_id INT NOT NULL REFERENCES Employe(id), -- Référence vers l'employé
-    date DATE NOT NULL, -- Date de l'heure supplémentaire
-    heures_travail DECIMAL(5, 2) NOT NULL, -- Nombre d'heures supplémentaires
-    CHECK (heures_travail > 0) -- Validation : le nombre d'heures doit être positif
-);
-
-CREATE OR REPLACE FUNCTION verifier_limite_heures_sup()
-RETURNS TRIGGER AS $$
-DECLARE
-    total_heures NUMERIC(5, 2);
-BEGIN
-    -- Calculer le total des heures supplémentaires de l'employé dans la même semaine
-    SELECT COALESCE(SUM(heures_travail), 0)
-    INTO total_heures
-    FROM HeuresSupplementaires
-    WHERE employe_id = NEW.employe_id
-      AND DATE_TRUNC('week', date) = DATE_TRUNC('week', NEW.date);
-
-    -- Vérifier si le total actuel + la nouvelle heure dépasse 20
-    IF total_heures + NEW.heures_travail > 20 THEN
-        RAISE EXCEPTION 'Limite hebdomadaire dépassée : % heures supplémentaires déjà enregistrées pour cet employé.', total_heures;
-    END IF;
-
-    RETURN NEW; -- Permet l'insertion si la limite n'est pas dépassée
-END;
-$$ LANGUAGE plpgsql;
-
-
-CREATE TRIGGER trigger_verifier_limite_heures_sup
-BEFORE INSERT ON HeuresSupplementaires
-FOR EACH ROW
-EXECUTE FUNCTION verifier_limite_heures_sup();
-
-
-----------------------------------------
-
-CREATE TABLE TypesJours (
-    id SERIAL PRIMARY KEY,
-    type_label VARCHAR(50) NOT NULL UNIQUE, -- Nom du type (dimanche, férié, etc.)
-    description VARCHAR(255) -- Description facultative
-);
-
-INSERT INTO TypesJours (type_label, description)
-VALUES 
-    ('dimanche', 'Jour travaillé le dimanche'),
-    ('ferie', 'Jour férié officiel'),
-    ('autre', 'Autres jours spéciaux non définis');
-
-CREATE TABLE HeuresSpeciales (
-    id SERIAL PRIMARY KEY,
-    employe_id INT NOT NULL REFERENCES Employe(id),
-    date DATE NOT NULL, -- Date spécifique de l'heure spéciale
-    type_jour_id INT NOT NULL REFERENCES TypesJours(id), -- Référence au type de jour
-    heures_travail DECIMAL(5, 2) NOT NULL -- Nombre d'heures travaillées
-);
-
-
 CREATE OR REPLACE VIEW v_cv_dashboard AS
 SELECT 
     c.id AS id_candidature,
@@ -247,3 +186,65 @@ INSERT INTO Statut (label) VALUES ('Actif'), ('Resilié');
 INSERT INTO Statut_Preavis (label) VALUES ('En cours'), ('Non respecter'), ('Terminer');
 INSERT INTO Statut_Paiement (label) VALUES ('En attente'), ('Régle');
 INSERT INTO Type_Rupture (label) VALUES ('Licenciement'), ('Demission');
+
+
+-- Heure sup
+CREATE TABLE HeuresSupplementaires (
+    id SERIAL PRIMARY KEY,
+    employe_id INT NOT NULL REFERENCES Employe(id), -- Référence vers l'employé
+    date DATE NOT NULL, -- Date de l'heure supplémentaire
+    heures_travail DECIMAL(5, 2) NOT NULL, -- Nombre d'heures supplémentaires
+    CHECK (heures_travail > 0) -- Validation : le nombre d'heures doit être positif
+);
+
+CREATE OR REPLACE FUNCTION verifier_limite_heures_sup()
+RETURNS TRIGGER AS $$
+DECLARE
+    total_heures NUMERIC(5, 2);
+BEGIN
+    -- Calculer le total des heures supplémentaires de l'employé dans la même semaine
+    SELECT COALESCE(SUM(heures_travail), 0)
+    INTO total_heures
+    FROM HeuresSupplementaires
+    WHERE employe_id = NEW.employe_id
+      AND DATE_TRUNC('week', date) = DATE_TRUNC('week', NEW.date);
+
+    -- Vérifier si le total actuel + la nouvelle heure dépasse 20
+    IF total_heures + NEW.heures_travail > 20 THEN
+        RAISE EXCEPTION 'Limite hebdomadaire dépassée : % heures supplémentaires déjà enregistrées pour cet employé.', total_heures;
+    END IF;
+
+    RETURN NEW; -- Permet l'insertion si la limite n'est pas dépassée
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER trigger_verifier_limite_heures_sup
+BEFORE INSERT ON HeuresSupplementaires
+FOR EACH ROW
+EXECUTE FUNCTION verifier_limite_heures_sup();
+
+
+----------------------------------------
+
+CREATE TABLE TypesJours (
+    id SERIAL PRIMARY KEY,
+    type_label VARCHAR(50) NOT NULL UNIQUE, -- Nom du type (dimanche, férié, etc.)
+    description VARCHAR(255) -- Description facultative
+);
+
+INSERT INTO TypesJours (type_label, description)
+VALUES 
+    ('dimanche', 'Jour travaillé le dimanche'),
+    ('ferie', 'Jour férié officiel'),
+    ('autre', 'Autres jours spéciaux non définis');
+
+CREATE TABLE HeuresSpeciales (
+    id SERIAL PRIMARY KEY,
+    employe_id INT NOT NULL REFERENCES Employe(id),
+    date DATE NOT NULL, -- Date spécifique de l'heure spéciale
+    type_jour_id INT NOT NULL REFERENCES TypesJours(id), -- Référence au type de jour
+    heures_travail DECIMAL(5, 2) NOT NULL -- Nombre d'heures travaillées
+);
+
+
