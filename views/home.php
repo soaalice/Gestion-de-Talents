@@ -12,7 +12,7 @@ if ($user->isAuthentified()) {
         echo "<div class='row mt-5'>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=offerForm' class='btn btn-warning btn-lg highlight-btn'>Create an Offer</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=recruiterDashboard' class='btn btn-success btn-lg highlight-btn'>My Offers & Applications</a></p></div>";
-        echo "<div class='col-4'><p class='text-center'><a href='index.php?page=listeEmploye' class='btn btn-success btn-lg highlight-btn'>My Employes</a></p></div>";
+        echo "<div class='col-4'><p class='text-center'><a href='index.php?page=listeEmploye' class='btn btn-warning btn-lg highlight-btn'>My Employes</a></p></div>";
         // echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
     } elseif (strtolower($role) === 'client') {

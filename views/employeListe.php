@@ -37,68 +37,93 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
    
 }
 include('header.php');
-?>
-<h2>List Employes Actives:</h2>
-<table border="1">
-    <tr>
-        <td>Id</td>
-        <td>Nom</td>
-        <td>Action</td>
-    </tr>
-    <?php foreach ($offers as $offer): ?>
-    <tr>
-        <td><?= htmlspecialchars($offer['id']) ?></td>
-        <td><?= htmlspecialchars($offer['nom']) ?></td>
-        <form action="index.php?page=listeEmploye" method="post">
-            <input type="hidden" name="idcontrat" value="<?= $offer['id'] ?>">
-            <input type="hidden" name="type" value="l">
-            <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
-            <td> <input type="submit" value="Licencier"></td>
-        </form> 
-       
-    </tr>
-        <?php endforeach; ?>
-</table>
-<h2>List Employes in Preavis :</h2>
-<table border="1">
-    <tr>
-        <td>Id</td>
-        <td>Nom</td>
-        <td>Action</td>
-    </tr>
-    <?php foreach ($offersPreavis as $offer): ?>
-    <tr>
-        <td><?= htmlspecialchars($offer['employe_id']) ?></td>
-        <td><?= htmlspecialchars($offer['nom']) ?></td>
-        <form action="index.php?page=listeEmploye" method="post">
-            <input type="hidden" name="preavis_id" value="<?= $offer['preavis_id'] ?>">
-            <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
-            <input type="hidden" name="type" value="t">
-            <td> <input type="submit" value="Terminer"></td>
-        </form> 
-        <form action="index.php?page=listeEmploye" method="post">
-            <input type="hidden" name="preavis_id" value="<?= $offer['preavis_id'] ?>">
-            <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
-            <input type="hidden" name="type" value="nr">
-            <input type="hidden" name="salaire" value="<?= $offer['salaire'] ?>">
-            <td> <input type="submit" value="Non respecter"></td>
-        </form> 
-    </tr>
-        <?php endforeach; ?>
-</table>
-<h2>List Employes payant les indemnites:</h2>
-<table border="1">
-    <tr>
-        <td>Id</td>
-        <td>Nom</td>
-        <td>Action</td>
-    </tr>
-    <?php foreach ($offersPreavisI as $offer): ?>
-    <tr>
-        <td><?= htmlspecialchars($offer['employe_id']) ?></td>
-        <td><?= htmlspecialchars($offer['nom']) ?></td>
-       
-       
-    </tr>
-        <?php endforeach; ?>
-</table>
+?><div class="container">
+    <div class="my-3">
+        <h2>Liste des Employés Actifs</h2>
+    </div>
+<div class="table-container">
+    <table class="table table-striped table-bordered">
+        <thead class="table-primary">
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($offers as $offer): ?>
+            <tr>
+                <td><?= htmlspecialchars($offer['id']) ?></td>
+                <td><?= htmlspecialchars($offer['nom']) ?></td>
+                <td>
+                    <form action="index.php?page=listeEmploye" method="post" class="d-inline">
+                        <input type="hidden" name="idcontrat" value="<?= $offer['id'] ?>">
+                        <input type="hidden" name="type" value="l">
+                        <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
+                        <button type="submit" class="btn btn-danger btn-sm btn-action">Licencier</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<div class="my-3">
+    <h2>Liste des Employés en Préavis</h2>
+</div>
+<div class="table-container">
+    <table class="table table-striped table-bordered">
+        <thead class="table-warning">
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($offersPreavis as $offer): ?>
+            <tr>
+                <td><?= htmlspecialchars($offer['employe_id']) ?></td>
+                <td><?= htmlspecialchars($offer['nom']) ?></td>
+                <td>
+                    <form action="index.php?page=listeEmploye" method="post" class="d-inline">
+                        <input type="hidden" name="preavis_id" value="<?= $offer['preavis_id'] ?>">
+                        <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
+                        <input type="hidden" name="type" value="t">
+                        <button type="submit" class="btn btn-success btn-sm btn-action">Terminer</button>
+                    </form>
+                    <form action="index.php?page=listeEmploye" method="post" class="d-inline">
+                        <input type="hidden" name="preavis_id" value="<?= $offer['preavis_id'] ?>">
+                        <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
+                        <input type="hidden" name="type" value="nr">
+                        <input type="hidden" name="salaire" value="<?= $offer['salaire'] ?>">
+                        <button type="submit" class="btn btn-warning btn-sm btn-action">Non respecter</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<div class="my-3">
+    <h2>Liste des Employés payant des Indemnités</h2>
+</div>
+<div class="table-container">
+    <table class="table table-striped table-bordered">
+        <thead class="table-secondary">
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($offersPreavisI as $offer): ?>
+            <tr>
+                <td><?= htmlspecialchars($offer['employe_id']) ?></td>
+                <td><?= htmlspecialchars($offer['nom']) ?></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+</div>

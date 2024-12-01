@@ -30,37 +30,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 include('header.php');
-?>
-<?php if(!empty($contract) && isset($contract)){ ?>
-<h2>Details of the Contract</h2>
+?><body>
+<div class="container mt-5">
 
+    <?php if (!empty($contract) && isset($contract)): ?>
+        <div class="card">
+            <div class="card-header text-center bg-primary text-white">
+                <h2>Détails du Contrat</h2>
+            </div>
+            <div class="card-body">
+                <p><strong>Date de début :</strong> <?= htmlspecialchars($contract[0]['date_debut']) ?></p>
+                <p><strong>Date de fin :</strong> <?= htmlspecialchars($contract[0]['date_fin']) ?></p>
+                <p><strong>Salaire :</strong> <?= htmlspecialchars($contract[0]['salaire']) ?></p>
+                <p><strong>Employeur :</strong> <?= htmlspecialchars($contract[0]['nom']) ?></p>
+                <form action="index.php?page=contract" method="post">
+                    <input type="hidden" name="idcontrat" value="<?= $contract[0]['id'] ?>">
+                    <input type="hidden" name="type" value="d">
+                    <button type="submit" class="btn btn-danger w-100">Démissionner</button>
+                </form>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-info text-center p-5">
+            <p class="display-6 p-5">Vous n'avez pas de contrat en ce moment.</p>
+        </div>
 
-<p>Date debut :  <?= htmlspecialchars($contract[0]['date_debut']) ?></p>
-<p>Date fin :  <?= htmlspecialchars($contract[0]['date_fin']) ?></p>
-<p>Salaire :  <?= htmlspecialchars($contract[0]['salaire']) ?></p>
-<p>Employeur :  <?= htmlspecialchars($contract[0]['nom']) ?></p>
-    <form action="index.php?page=contract" method="post">
-        <input type="hidden" name="idcontrat" value="<?= $contract[0]['id'] ?>">
-        <input type="hidden" name="type" value="d">
-        <input type="submit" value="Demissioner">
-    </form>
-    <?php }else{ ?>
-        <p>Vous n'avez pas de contrat en ce moment.</p>
-        
-        
-        <?php
-    $indemnite = $user->getIndemnite($_SESSION['user_id']);
-if(count($indemnite) > 0){
-    ?>
-
-<p>Montant :  <?= htmlspecialchars($indemnite[0]['montant']) ?></p>
-
-<form action="index.php?page=contract" method="post">
-    <input type="hidden" name="id_ip" value="<?= $indemnite[0]['id'] ?>">
-    <input type="hidden" name="id_emp" value="<?= $indemnite[0]['employeur_id'] ?>">
-    <input type="date" name="date" >
-    <input type="hidden" name="type" value="p">
-        <input type="submit" value="Payer">
-    </form>
-<?php } ?>
-<?php } ?>
+        <?php 
+        $indemnite = $user->getIndemnite($_SESSION['user_id']); 
+        if (count($indemnite) > 0): 
+        ?>
+            <div class="card">
+                <div class="card-header text-center bg-warning text-dark">
+                    <h2>Indemnité</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Montant :</strong> <?= htmlspecialchars($indemnite[0]['montant']) ?></p>
+                    <form action="index.php?page=contract" method="post">
+                        <input type="hidden" name="id_ip" value="<?= $indemnite[0]['id'] ?>">
+                        <input type="hidden" name="id_emp" value="<?= $indemnite[0]['employeur_id'] ?>">
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date de paiement</label>
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+                        <input type="hidden" name="type" value="p">
+                        <button type="submit" class="btn btn-success w-100">Payer</button>
+                    </form>
+                </div>
+            </div>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>

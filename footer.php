@@ -13,7 +13,7 @@
             </div>
             
             <!-- Section Liens Utiles -->
-            <div class="col-md-4">
+            <div class="col-md-4 text-center">
                 <h5>Liens Utiles</h5>
                 <ul class="list-unstyled">
                     <li><a href="#" class="text-white">À propos</a></li>
@@ -24,9 +24,9 @@
             </div>
             
             <!-- Section Réseaux Sociaux -->
-            <div class="col-md-4">
+            <div class="col-md-4 text-end">
                 <h5>Suivez-nous</h5>
-                <div class="d-flex">
+                <div class="d-flex justify-content-end">
                     <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
                     <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
                     <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
