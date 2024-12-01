@@ -125,3 +125,26 @@ WHERE employe_id = 1 -- Remplacez 1 par l'ID de l'employé
   AND DATE_TRUNC('month', date) = '2024-11-01' -- Mois de novembre 2024
 GROUP BY employe_id, DATE_TRUNC('week', date)
 ORDER BY semaine;
+
+
+select ca.idoffre
+from contrat c
+left join candidature ca 
+on c.candidature_id = ca.id
+where c.statut_id = 1
+
+-- ALTER TABLE contrat
+-- ADD COLUMN salaire Decimal(11,2) ;
+
+Select p.nom,pr.id as preavis_id,c.employe_id,c.salaire
+         from  preavis pr
+        left join ruptureContrat r
+        on pr.rupture_id = r.id
+        left join contrat c
+        on c.id = r.contrat_id
+        left join personne p
+        on p.id = c.employe_id
+        where c.employeur_id = 2
+        and c.statut_id = 2
+        and pr.statut_preavis_id = 1;
+

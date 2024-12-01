@@ -6,7 +6,7 @@ require_once 'inc/m_learning.php';
 try {
     // Récupérer les offres disponibles
     $id = $_GET['id'] ?? null;
-    $offers = $user->getOffers();
+    $offers = $user->getAvailableOffers();
 
     // if (!$id) {
     //     throw new Exception("ID de l'offre manquant !");
@@ -17,7 +17,8 @@ try {
         $offerId = $_POST['offer_id'];
         $applicationDate = $_POST['application_date'];
         $personId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté est supposé être dans la session
-
+        $offre = $user->getOffreById($offerId);
+        $person = $user->getPersonById($personId);
         // if ($user->createApplication($offerId, $applicationDate, $personId)) {
         //     echo "<div class='alert alert-success text-center'>Application successfully submitted!</div>";
         // } else {
@@ -77,6 +78,7 @@ try {
 
             // Exemple de sauvegarde (décommenter si nécessaire)
             if ($user->createApplication($offerId, $applicationDate, $idCv)) {
+                $user->insertNotifs("La personne de ".$person[0]['nom']." a depose son cv sur votre offre, veuillez verifier.",$offre[0]['idpersonne']);
                 echo "<p>Application successfully submitted!</p>";
                 header('location:index.php?page=application');
                 exit;
@@ -122,8 +124,7 @@ try {
                             <select name="offer_id" id="offer_id" class="form-control" required>
                                 <?php foreach ($offers as $offer): ?>
                                     <option
-                                        <?php if($id): if($id == $offerId) echo "selected"; endif ?>
-                                        value="<?= htmlspecialchars($offer['id']) ?>">
+                                        value="<?= htmlspecialchars($offer['offer_id']) ?>">
                                         <?= htmlspecialchars($offer['job_name']) ?>
                                     </option>
                                 <?php endforeach; ?>
