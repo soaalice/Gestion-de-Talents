@@ -1,6 +1,7 @@
 <?php
 require_once 'classes/Database.php';
 require_once 'classes/User.php';
+require_once 'classes/Constante.php';
 
 session_start();
 
@@ -69,6 +70,15 @@ switch ($page) {
         break;
     case 'quest':
         include 'views/quest.php';
+        break;
+    case 'contract':
+        include 'views/contract.php';
+        break;
+    case 'contractForm':
+        include 'views/contractForm.php';
+        break;
+    case 'listeEmploye':
+        include 'views/employeListe.php';
         break;
     case 'logout':
         $user->logout();

@@ -12,6 +12,7 @@ if ($user->isAuthentified()) {
         echo "<div class='row mt-5'>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=offerForm' class='btn btn-warning btn-lg highlight-btn'>Create an Offer</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=recruiterDashboard' class='btn btn-success btn-lg highlight-btn'>My Offers & Applications</a></p></div>";
+        echo "<div class='col-4'><p class='text-center'><a href='index.php?page=listeEmploye' class='btn btn-success btn-lg highlight-btn'>My Employes</a></p></div>";
         // echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
     } elseif (strtolower($role) === 'client') {
@@ -22,6 +23,7 @@ if ($user->isAuthentified()) {
 
         if (count($applications) > 0) {
             echo "<p class='text-center mt-3'><a href='index.php?page=candidateDashboard' class='btn btn-outline-success btn-lg highlight-btn'>My Applications & Available Offers</a></p>";
+            echo "<p class='text-center mt-3'><a href='index.php?page=contract' class='btn btn-outline-success btn-lg highlight-btn'>My Contract</a></p>";
             echo "<h3 class='mt-4' style='color: #3a6a40;'>Your Applications:</h3>";
             echo "<ul class='list-group mt-3'>";
             foreach ($applications as $application) {

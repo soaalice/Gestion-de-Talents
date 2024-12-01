@@ -8,7 +8,7 @@ include "header.php";
 $userId = $_SESSION['user_id']; // ID du postulant connecté
 
 // Récupérer les offres disponibles
-$offers = $user->getAvailableOffers($_SESSION['user_cv']);
+$offers = $user->getAvailableOffers($_SESSION['user_id']);
 
 // Récupérer les candidatures du postulant
 $infos = $user->getCvDashboardInfoPerson($userId);

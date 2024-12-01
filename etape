@@ -1,0 +1,14 @@
+modification de schema : ajout de script v_cv_dashboard
+
+Ajout de classe Constante pour les id type 
+
+Modification de application form avec ajout de notification
+
+creation de la page contract , contractForm et employeListe
+
+Modification de home : ajout de lien admin->My EMployes et Client->My contracts
+
+Modification de oratest avec ajout de notification 
+
+modification de recruiter dashboard avc modifcation du lien voir plus en ajout de contrat
+ --- need changement -> ajout de id_candidature dans contrat

@@ -91,3 +91,98 @@ CREATE TABLE notifications (
     etat INTEGER NOT NULL default 0,
     dateheure_at TIMESTAMP NOT NULL default CURRENT_TIMESTAMP
 );
+
+
+CREATE OR REPLACE VIEW v_cv_dashboard AS
+SELECT 
+    c.id AS id_candidature,
+    p.id AS id_personne,
+    p.nom AS nom_personne,
+    j.nom AS nom_job,
+    c.idcv AS id_cv,
+    c.idoffre AS id_offre,
+    o.idpersonne AS id_recruteur,  -- Ajout de l'id du recruteur
+    cv.note_competence AS note_competence,
+    cv.note_experience AS note_experience,
+    cv.note_education AS note_education,
+    ROUND((cv.note_competence + cv.note_experience + cv.note_education) / 3.0, 2) AS moyenne_notes,
+    c.datePostule,
+    c.etat
+FROM 
+    Candidature c
+JOIN 
+    cv ON c.idcv = cv.id
+JOIN 
+    Personne p ON cv.idpersonne = p.id
+JOIN 
+    Offre o ON c.idOffre = o.id
+JOIN 
+    Job j ON o.idJob = j.id;
+
+    -- Table: Statut (table vaovao)
+CREATE TABLE Statut (
+    id SERIAL PRIMARY KEY,
+    label VARCHAR(50) NOT NULL
+);
+
+-- Table: Statut_Preavis (table vaovao)
+CREATE TABLE Statut_Preavis (
+    id SERIAL PRIMARY KEY,
+    label VARCHAR(50) NOT NULL
+);
+
+-- Table: Statut_Paiement (table vaovao)
+CREATE TABLE Statut_Paiement (
+    id SERIAL PRIMARY KEY,
+    label VARCHAR(50) NOT NULL
+);
+
+-- Table: Type_Rupture (table afa)
+CREATE TABLE Type_Rupture (
+    id SERIAL PRIMARY KEY,
+    label VARCHAR(50) NOT NULL
+);
+
+-- Table: Contrat
+CREATE TABLE Contrat (
+    id SERIAL PRIMARY KEY,
+    date_debut DATE NOT NULL,
+    date_fin DATE,
+    statut_id INT NOT NULL REFERENCES Statut(id),
+    candidature_id INT NOT NULL REFERENCES candidature(id),
+    employe_id INT NOT NULL REFERENCES personne(id), 
+    employeur_id INT NOT NULL REFERENCES personne(id),
+    salaire Decimal(11,2) not null
+);
+
+-- Table: RuptureContrat
+CREATE TABLE RuptureContrat (
+    id SERIAL PRIMARY KEY,
+    contrat_id INT NOT NULL REFERENCES Contrat(id),
+    date_rupture DATE NOT NULL,
+    type_rupture_id INT NOT NULL REFERENCES Type_Rupture(id)
+);
+
+-- Table: Preavis
+CREATE TABLE Preavis (
+    id SERIAL PRIMARY KEY,
+    rupture_id INT NOT NULL REFERENCES RuptureContrat(id),
+    date_debut DATE NOT NULL,
+    date_fin DATE,
+    statut_preavis_id INT NOT NULL REFERENCES Statut_Preavis(id)
+);
+
+-- Table: IndemnitePreavis
+CREATE TABLE IndemnitePreavis (
+    id SERIAL PRIMARY KEY,
+    preavis_id INT NOT NULL REFERENCES Preavis(id),
+    montant DECIMAL(15, 2) NOT NULL,
+    date_paiement DATE,
+    statut_paiement_id INT NOT NULL REFERENCES Statut_Paiement(id)
+);
+
+-- Insérer les valeurs initiales dans les tables de référence
+INSERT INTO Statut (label) VALUES ('Actif'), ('Resilié');
+INSERT INTO Statut_Preavis (label) VALUES ('En cours'), ('Non respecter'), ('Terminer');
+INSERT INTO Statut_Paiement (label) VALUES ('En attente'), ('Régle');
+INSERT INTO Type_Rupture (label) VALUES ('Licenciement'), ('Demission');

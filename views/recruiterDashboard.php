@@ -63,11 +63,13 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
             <th>Status Candidature</th>
             <th>Status Test Écrit</th>
             <th>Status Test Oral</th>
-            <th>Action</th>
+                <th>Action</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach ($applications as $application):
+        $listeInter = $user->checkExistence($application['id_candidature']);
+        if (count($listeInter) == 0) {
             $writtenTestStatus = $user->getWrittenTestStatus($application['id_candidature']);
             $oralTestStatus = $user->getOralTestStatus($application['id_candidature']);
         ?>
@@ -102,7 +104,7 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
                             $style = $user->getStyleForNote(1, $noteWrittenTest);
                             echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
                         } else {
-                            echo '<a href="index.php?page=writtenTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
+                            echo '<a href="index.php?page=writtenTestForm&idcandidat='.$application['id_personne'].'&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
                         }
                     }
                     ?>
@@ -123,7 +125,7 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
                                 $style = $user->getStyleForNote(2, $noteWrittenTest);
                                 echo '<span style="' . $style . '">Note: ' . number_format($noteWrittenTest, 2) . '</span>';
                             } else {
-                                echo '<a href="index.php?page=oralTestForm&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
+                                echo '<a href="index.php?page=oralTestForm&idcandidat='.$application['id_personne'].'&applicationId=' . $application['id_candidature'] . '">Évaluer</a>';
                             }
                         }
                     } else {
@@ -132,9 +134,12 @@ $applications = $user->getCvDashboardInfoOffreRecruter($recruiterId);
                     ?>
                 </td>
                 <!-- <td><a href="index.php?page=detailOffre&&offreid=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td> -->
-                <td><a href="index.php?page=detailOffre&&id=<?= htmlspecialchars($application['id_offre']) ?>&&idcandidat=<?= htmlspecialchars($application['id_candidature']) ?>"><button>Voir plus</button> </a></td>
+                <?php if ($oralTestStatus) { ?>
+                    <td><a href="index.php?page=contractForm&&idcandidat=<?= htmlspecialchars($application['id_personne']) ?>"><button>Offrir un contrat</button> </a></td>
+                    <?php } ?>
             </tr>
-        <?php endforeach; ?>
+            
+        <?php } endforeach; ?>
     </tbody>
 </table>
   </div>

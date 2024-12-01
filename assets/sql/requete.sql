@@ -111,3 +111,14 @@ LEFT JOIN
 WHERE 
     c.idpersonne = 3 and c.idoffre = 2 -- Remplacez <ID_PERSONNE> par l'identifiant de la personne
     AND c.isTaken = FALSE; -- Filtre sur les candidatures non prises (si nécessaire)
+
+
+select ca.idoffre
+from contrat c
+left join candidature ca 
+on c.candidature_id = ca.id
+where c.statut_id = 1
+
+-- ALTER TABLE contrat
+-- ADD COLUMN salaire Decimal(11,2) ;
+

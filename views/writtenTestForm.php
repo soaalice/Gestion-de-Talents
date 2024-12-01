@@ -7,6 +7,8 @@ if (!$user->isAuthentified() || strtolower($user->getRole()) !== 'admin') {
 
 $applicationId = isset($_GET['applicationId']) ? $_GET['applicationId'] : null;
 
+$idcandidat = isset($_GET['idcandidat']) ? $_GET['idcandidat'] : null;
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $note = $_POST['note'];
 
@@ -16,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         VALUES (?, ?, 1,now())
     ");
     $stmt->execute([$note, $applicationId]);
+    $user->insertNotifs("Votre note ecrite a ete determinee , veuillez verifier.",$idcandidat);
 
     // Redirection vers le tableau des candidatures
     header('Location: index.php?page=recruiterDashboard');

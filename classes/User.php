@@ -1,8 +1,10 @@
 <?php
+require 'classes/Constante.php';
 header('Content-Type: text/html; charset=UTF-8');
 class User
 {
     private $db;
+    private $cons;
 
     public function __construct($db)
     {
@@ -31,6 +33,11 @@ class User
         VALUES (?, ?, ?, ?, ?, ?)
     ");
         return $stmt->execute([$name, $email, $hashedPassword, $phone, $dob, $idRole]);
+    }
+    public function getPersonById($id){
+        $stmt = $this->db->prepare("select * from Personne WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
 
@@ -101,8 +108,22 @@ class User
         FROM Offre o
         LEFT JOIN Job j ON o.idjob = j.id
         LEFT JOIN Personne p ON o.idPersonne = p.id
+        where o.id not in (select ca.idoffre
+        from contrat c
+        left join candidature ca 
+        on c.candidature_id = ca.id
+        where c.statut_id = ?
+    )");
+        $stmt->execute([Constante::id_actif()]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getOfferById($id)
+    {
+        $stmt = $this->db->prepare("
+       select * from offre
+       where id =  ?
     ");
-        $stmt->execute();
+        $stmt->execute([$id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -133,16 +154,19 @@ class User
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getAvailableOffers($usercv)
+    public function getAvailableOffers()
     {
         $stmt = $this->db->prepare("
         SELECT o.id AS offer_id, j.nom AS job_name, o.dateCreation,o.dateFin
         FROM Offre o
         LEFT JOIN Job j ON o.idjob = j.id 
-        where o.id not in (select idoffre from candidature 
-        where idcv = ?)
+        where o.id not in (select ca.idoffre
+        from contrat c
+        left join candidature ca 
+        on c.candidature_id = ca.id
+        where c.statut_id = ?)
     ");
-        $stmt->execute([$usercv]);
+        $stmt->execute([Constante::id_actif()]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
@@ -405,6 +429,7 @@ class User
                 v_cv_dashboard
             WHERE 
                 id_personne = ?
+            order by datePostule desc    
         ");
 
         $stmt->execute([$idperson]);
@@ -471,6 +496,8 @@ class User
         $stmt = $this->db->prepare("
             SELECT 
                 id_candidature,
+                id_personne,
+                id_recruteur,
                 nom_personne,
                 nom_job,
                 id_offre,
@@ -483,12 +510,25 @@ class User
             FROM 
                 v_cv_dashboard
             WHERE 
-                id_recruteur = ?
+                id_recruteur = ? 
         ");
 
         $stmt->execute([$idrecruteur]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    }
+    public function checkExistence($idcandidature){
+        $stmt = $this->db->prepare("
+        SELECT 
+          *
+        FROM 
+            contrat
+        WHERE 
+            candidature_id = ?
+    ");
+
+    $stmt->execute([$idcandidature]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getUnreadNotifs($userId)  {
@@ -516,6 +556,104 @@ class User
         $stmt = $this->db->prepare("INSERT INTO notifications (textenotif, idpersonne) VALUES ( :texte , :idpersonne )");
         $stmt->bindParam(':texte', $text, PDO::PARAM_STR);
         $stmt->bindParam(':idpersonne', $iddestinataire, PDO::PARAM_INT);
-        $stmt->execute();
+      return  $stmt->execute();
+    }
+    public function createContract($date_debut,$date_fin,$employe_id,$employeur_id){
+        $query = "INSERT INTO Contrat (date_debut, date_fin, statut_id, employe_id, employeur_id) 
+        VALUES (:date_debut, :date_fin, :statut_id, :employe_id, :employeur_id)";
+        $statut = Constante::id_actif();
+        $stmt = $this->db->prepare($query);
+        $stmt->bindParam(':date_debut', $date_debut);
+        $stmt->bindParam(':date_fin', $date_fin);
+        $stmt->bindParam(':statut_id',$statut);
+        $stmt->bindParam(':employe_id', $employe_id);
+        $stmt->bindParam(':employeur_id', $employeur_id);
+        $this->insertNotifs("Vous avez un nouveau contrat.",$employe_id);
+       return $stmt->execute();
+    }
+
+    public function getMyContract($user){
+        $stmt = $this->db->prepare("
+           Select * from contrat
+           where employe_id = ?
+           and statut_id = 1
+        ");
+
+        $stmt->execute([$user]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function createRupture($date,$idcontract,$type){
+         $stmt = $this->db->prepare("
+         INSERT INTO rupturecontrat (contrat_id, date_rupture, type_rupture_id)
+         VALUES (?, ?, ?)
+     ");
+     $stmt->execute([$idcontract, $date, $type]);
+         return  $this->db->lastInsertId(); 
+    }
+    public function resilieContract($idcontract){
+        $stmt = $this->db->prepare("
+        update contrat set statut_id = ? where id = ?
+    ");
+        return $stmt->execute([Constante::id_resilie(), $idcontract]);
+    }
+    public function createPreavis($rupture_id,$date){
+        $stmt = $this->db->prepare("
+        INSERT INTO preavis (rupture_id, date_debut, date_fin,statut_preavis_id)
+        VALUES (?, ?, ?, ?)
+    ");
+        return $stmt->execute([$rupture_id, $date, Constante::date_fin($date),Constante::id_en_cours()]);
+    }
+
+    public function ruptureContract($user,$idcontract,$employeur,$type){    
+        $date =date("Y-m-d");
+       $rupture_id =  $this->createRupture($date,$idcontract,$type);
+       $this->resilieContract($idcontract);
+       $this->createPreavis($rupture_id,$date);
+        $text = "";
+        $idreceiver=$user;
+        if ($type == Constante::id_demission()) {
+            $person = $this->getPersonById($user);
+            $text = "L'employe ".$person[0]['nom']." a pose une lettre de demision.";
+            $this->insertNotifs("Vous venez de resilier votre contrat , il vous reste 1 mois.",$user);
+            $idreceiver=$employeur;
+        } else {
+            $person = $this->getPersonById($employeur);
+            $text = "L'employeur ".$person[0]['nom']." a decide de vous licencier , votre contrat a donc ete resilie. Il vous reste 1 mois.";
+            $idreceiver=$user;
+        }
+       return $this->insertNotifs($text,$idreceiver);
+    }
+
+    public function getEmployes($id){
+        $stmt = $this->db->prepare("
+        Select p.nom,c.id,c.employe_id from contrat c
+        left join personne p
+        on p.id = c.employe_id
+        where c.employeur_id = ?
+        and statut_id = ?
+     ");
+
+     $stmt->execute([$id,Constante::id_actif()]);
+     return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function getEmployesPreavis($id){
+        $stmt = $this->db->prepare("
+        Select p.nom,c.id,c.employe_id from contrat c
+        left join personne p
+        on p.id = c.employe_id
+        where c.employeur_id = ?
+        and c.statut_id = ?
+        and c.id in (
+        select r.contrat_id
+        from  preavis pr
+        left join ruptureContrat r
+        on pr.rupture_id = r.id
+        where pr.statut_preavis_id = ?
+        )
+        
+     ");
+
+     $stmt->execute([$id,Constante::id_resilie(),Constante::id_en_cours()]);
+     return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }   
