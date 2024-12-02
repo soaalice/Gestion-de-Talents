@@ -1,4 +1,16 @@
 <?php 
+    // salaire de base
+    function getTauxJournalier($salaireBase){
+        return $salaireBase/30;
+    }
+
+    function getTauxHoraire($salaireBase){
+        return $salaireBase/173.33;
+    }
+
+
+
+
 
     // heure sup multiplicateur
     const HEURE_SUP_8_FIRST = 1.3;
@@ -28,6 +40,29 @@
 
     function salaireHeure_NUIT($tauxHoraire,$heureSup){
         return $tauxHoraire * HEURE_NUIT * $heureSup;
+    }
+    // Fonction pour répartir les heures supplémentaires
+    function repartitionHeureSup($heure) {
+        $valiny = [];
+        if ($heure <= 8) {
+            $valiny['first'] = $heure;
+            $valiny['last'] = 0;
+            return $valiny;
+        }
+        $valiny['first'] = 8;
+        $valiny['last'] = $heure - 8;
+        return $valiny;
+    }
+    // Fonction pour calculer les totaux des "first" et "last"
+    function calculerTotaux($heures_supplementaires) {
+        $totaux = ['first' => 0, 'last' => 0]; // Initialiser les totaux
+
+        foreach ($heures_supplementaires as $heure_supp) {
+            $repartition = repartitionHeureSup($heure_supp['total_heures']);
+            $totaux['first'] += $repartition['first'];
+            $totaux['last'] += $repartition['last'];
+        }
+        return $totaux;
     }
 
     // IRSA
@@ -61,7 +96,6 @@
 
         return $irsa;
     }
-
 
     // Retenue salariale
     function RETENUE_CNAPS($salaireBrut){

@@ -93,32 +93,6 @@ CREATE TABLE notifications (
 );
 
 
-CREATE OR REPLACE VIEW v_cv_dashboard AS
-SELECT 
-    c.id AS id_candidature,
-    p.id AS id_personne,
-    p.nom AS nom_personne,
-    j.nom AS nom_job,
-    c.idcv AS id_cv,
-    c.idoffre AS id_offre,
-    o.idpersonne AS id_recruteur,  -- Ajout de l'id du recruteur
-    cv.note_competence AS note_competence,
-    cv.note_experience AS note_experience,
-    cv.note_education AS note_education,
-    ROUND((cv.note_competence + cv.note_experience + cv.note_education) / 3.0, 2) AS moyenne_notes,
-    c.datePostule,
-    c.etat
-FROM 
-    Candidature c
-JOIN 
-    cv ON c.idcv = cv.id
-JOIN 
-    Personne p ON cv.idpersonne = p.id
-JOIN 
-    Offre o ON c.idOffre = o.id
-JOIN 
-    Job j ON o.idJob = j.id;
-
     -- Table: Statut (table vaovao)
 CREATE TABLE Statut (
     id SERIAL PRIMARY KEY,
@@ -191,7 +165,7 @@ INSERT INTO Type_Rupture (label) VALUES ('Licenciement'), ('Demission');
 -- Heure sup
 CREATE TABLE HeuresSupplementaires (
     id SERIAL PRIMARY KEY,
-    employe_id INT NOT NULL REFERENCES Employe(id), -- Référence vers l'employé
+    employe_id INT NOT NULL REFERENCES personne(id), -- Référence vers l'employé
     date DATE NOT NULL, -- Date de l'heure supplémentaire
     heures_travail DECIMAL(5, 2) NOT NULL, -- Nombre d'heures supplémentaires
     CHECK (heures_travail > 0) -- Validation : le nombre d'heures doit être positif
@@ -241,10 +215,24 @@ VALUES
 
 CREATE TABLE HeuresSpeciales (
     id SERIAL PRIMARY KEY,
-    employe_id INT NOT NULL REFERENCES Employe(id),
+    employe_id INT NOT NULL REFERENCES personne(id),
     date DATE NOT NULL, -- Date spécifique de l'heure spéciale
     type_jour_id INT NOT NULL REFERENCES TypesJours(id), -- Référence au type de jour
     heures_travail DECIMAL(5, 2) NOT NULL -- Nombre d'heures travaillées
 );
+
+
+CREATE TABLE EtatPaie (
+    id SERIAL PRIMARY KEY,                      -- Identifiant unique
+    employe_id INT NOT NULL REFERENCES personne(id), -- Référence à l'employé
+    periode DATE NOT NULL,                      -- Période de paiement (début du mois, semaine, etc.)
+    montant_total DECIMAL(15, 2) NOT NULL,      -- Montant total à payer
+    heures_supplementaires DECIMAL(5, 2) DEFAULT 0, -- Total des heures supplémentaires pour la période
+    heures_speciales DECIMAL(5, 2) DEFAULT 0,   -- Total des heures spéciales pour la période
+    etat_paiement VARCHAR(50) NOT NULL DEFAULT 'En attente', -- État de paiement (En attente, Payé, etc.)
+    date_paiement DATE,                         -- Date du paiement
+    remarque TEXT                               -- Remarque facultative (ex. retard, correction, etc.)
+);
+
 
 

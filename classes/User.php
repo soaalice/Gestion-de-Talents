@@ -576,7 +576,7 @@ class User
 
     public function getMyContract($user){
         $stmt = $this->db->prepare("
-           Select date_debut,date_fin,salaire,p.nom from contrat c
+           Select employe_id as id,date_debut,date_fin,salaire,p.nom from contrat c
            left join personne p
            on p.id = c.employeur_id
            where employe_id = ?
@@ -729,4 +729,77 @@ VALUES (?, ?, NULL, ?);
      $stmt->execute([$id,Constante::id_resilie(),Constante::id_non_respecter(),Constante::id_en_attente()]);
      return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
+    // heure supp 
+
+    public function getHeuresSupParSemaine($mois, $employe_id) {
+        $stmt = $this->db->prepare("
+            SELECT 
+                DATE_TRUNC('week', date) AS semaine_debut,
+                employe_id,
+                SUM(heures_travail) AS total_heures
+            FROM 
+                HeuresSupplementaires
+            WHERE 
+                DATE_TRUNC('month', date) = DATE_TRUNC('month', ?::DATE)
+                AND employe_id = ?
+            GROUP BY 
+                DATE_TRUNC('week', date), employe_id
+            ORDER BY 
+                semaine_debut
+        ");
+        $stmt->execute([$mois . '-01', $employe_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+
+    public function getHeuresSpecialesParMois($mois, $employe_id) {
+        $stmt = $this->db->prepare("
+            SELECT 
+                tj.type_label AS type_jour,
+                COALESCE(SUM(hs.heures_travail), 0) AS total_heures
+            FROM 
+                TypesJours tj
+            LEFT JOIN 
+                HeuresSpeciales hs 
+                ON hs.type_jour_id = tj.id
+                AND hs.employe_id = ?
+                AND DATE_TRUNC('month', hs.date) = DATE_TRUNC('month', ?::DATE)
+            GROUP BY 
+                tj.type_label
+            ORDER BY 
+                tj.type_label;
+        ");
+        $stmt->execute([$employe_id, $mois . '-01']);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    public function getEmployeInfo($employe_id) {
+        $stmt = $this->db->prepare("
+            SELECT 
+                p.id AS id,
+                p.nom AS nom,
+                j.nom AS job,
+                p.datenaissance AS date_naissance,
+                p.email,
+                p.phone,
+                c.date_debut AS dt_embauche,
+                DATE_PART('year', AGE(c.date_debut)) || ' ans' AS anciennete,
+                c.salaire
+            FROM 
+                Personne p
+            JOIN 
+                Contrat c ON p.id = c.employe_id
+            JOIN 
+                Job j ON j.id = c.candidature_id
+            WHERE 
+                p.id = ?
+        ");
+        $stmt->execute([$employe_id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    
+    
 }   

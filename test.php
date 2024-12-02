@@ -1,91 +1,58 @@
-<?php 
-    require_once "./inc/static/constant.php";
+<!-- <?php
+// Connexion à la base de données
+// $dsn = 'pgsql:host=localhost;dbname=talents';
+// $username = 'postgres';
+// $password = '2547';
 
-    $tauxHoraire = 24000;
-    $salaireBase = 4089409.09;
+// try {
+//     $pdo = new PDO($dsn, $username, $password);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Mois et ID employé
-    $mois = '2024-11'; // Mois de novembre 2024
-    $employe_id = 1; // ID de l'employé
+//     // Rôles
+//     $roles = [
+//         'admin' => 1,  // ID du rôle admin
+//         'client' => 2  // ID du rôle client
+//     ];
 
-    // Définir les valeurs fixes pour chaque semaine
-    $heures_supplementaires = [
-        [
-            'employe_id' => $employe_id,
-            'semaine_debut' => "$mois-01", // Début de la semaine
-            'heures' => 8, // Heures supplémentaires statiques pour cette semaine
-        ],
-        [
-            'employe_id' => $employe_id,
-            'semaine_debut' => "$mois-06",
-            'heures' => 10,
-        ],
-        [
-            'employe_id' => $employe_id,
-            'semaine_debut' => "$mois-13",
-            'heures' => 15,
-        ],
-        [
-            'employe_id' => $employe_id,
-            'semaine_debut' => "$mois-20",
-            'heures' => 7,
-        ],
-        [
-            'employe_id' => $employe_id,
-            'semaine_debut' => "$mois-27",
-            'heures' => 12,
-        ],
-    ];
+//     // Liste des noms pour générer les données
+//     $noms = [
+//         'Rabe Rakoto', 'Razafy Rasoarimanana', 'Andry Ratsimba', 'Faly Rakotomalala',
+//         'Tiana Randrianarisoa', 'Hery Raharimanana', 'Fanja Rasoanirina', 'Miora Rabetokotany',
+//         'Eric Rabeson', 'Hanitra Ralambomanana', 'Lala Randriamampionona', 'Haja Rafanomezantsoa',
+//         'Voahirana Razafindrakoto', 'Tojo Ramanandafy', 'Arisoa Ravelonarivo', 'Solohery Rakotovao',
+//         'Vola Rakotonirina', 'Mahery Rasoamanana', 'Mamy Ramaroson'
+//     ];
 
-    // Fonction pour répartir les heures supplémentaires
-    function repartitionHeureSup($heure) {
-        $valiny = [];
-        if ($heure <= 8) {
-            $valiny['first'] = $heure;
-            $valiny['last'] = 0;
-            return $valiny;
-        }
-        $valiny['first'] = 8;
-        $valiny['last'] = $heure - 8;
-        return $valiny;
-    }
+//     // Insérer les données
+//     $password = '1234';
+//     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    // Fonction pour calculer les totaux des "first" et "last"
-    function calculerTotaux($heures_supplementaires) {
-        $totaux = ['first' => 0, 'last' => 0]; // Initialiser les totaux
+//     foreach ($noms as $index => $nom) {
+//         $email = 'client' . ($index + 1) . '@example.com';
+//         $phone = '034' . str_pad($index + 1, 8, '0', STR_PAD_LEFT);
+//         $datenaissance = '1990-01-' . str_pad($index + 1, 2, '0', STR_PAD_LEFT);
+//         $idrole = $roles['client'];
 
-        foreach ($heures_supplementaires as $heure_supp) {
-            $repartition = repartitionHeureSup($heure_supp['heures']);
-            $totaux['first'] += $repartition['first'];
-            $totaux['last'] += $repartition['last'];
-        }
+//         // Insérer dans la table Personne
+//         $stmt = $pdo->prepare("
+//             INSERT INTO Personne (nom, email, mdp, phone, datenaissance, idrole) 
+//             VALUES (:nom, :email, :mdp, :phone, :datenaissance, :idrole)
+//         ");
+//         $stmt->execute([
+//             'nom' => $nom,
+//             'email' => $email,
+//             'mdp' => $hashedPassword,
+//             'phone' => $phone,
+//             'datenaissance' => $datenaissance,
+//             'idrole' => $idrole
+//         ]);
 
-        return $totaux;
-    }
+//         echo "Utilisateur ajouté : $nom avec email $email\n";
+//     }
 
-    // Calcul des totaux
-    $totaux = calculerTotaux($heures_supplementaires);
+//     echo "Tous les utilisateurs ont été insérés avec succès.";
 
-    // Affichage des totaux
-    echo "<h3>Totaux des Heures Supplémentaires</h3>";
-    echo "Total des 8 premières heures : " . $totaux['first'] . " heures, heure sup: ".$tauxHoraire * HEURE_SUP_8_FIRST."<br>";
-    echo "Total des heures restantes : " . $totaux['last'] . " heures, heure sup ".$tauxHoraire * HEURE_SUP_12_LAST."<br>";
-
-    // Afficher les heures supplémentaires et leur répartition
-    echo "<table border='1'>";
-    echo "<tr><th>Semaine Début</th><th>Heures Totales</th><th>8 Premières Heures</th><th>Restantes</th></tr>";
-
-    foreach ($heures_supplementaires as $heure_supp) {
-        $repartition = repartitionHeureSup($heure_supp['heures']); // Répartition des heures
-        echo "<tr>";
-        echo "<td>" . $heure_supp['semaine_debut'] . "</td>";
-        echo "<td>" . $heure_supp['heures'] . "</td>";
-        echo "<td>" . $repartition['first'] . "</td>";
-        echo "<td>" . $repartition['last'] . "</td>";
-        echo "</tr>";
-    }
-
-    echo "</table>";
-
-    echo "IRSA :" .calculIRSA($salaireBase);
-?>
+// } catch (PDOException $e) {
+//     echo "Erreur : " . $e->getMessage();
+// }
+?> -->

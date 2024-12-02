@@ -163,3 +163,18 @@ JOIN
     Offre o ON c.idOffre = o.id
 JOIN 
     Job j ON o.idJob = j.id;
+
+SELECT 
+    hs.employe_id,
+    tj.type_label AS type_jour,
+    COALESCE(SUM(hs.heures_travail), 0) AS total_heures
+FROM HeuresSpeciales hs
+JOIN TypesJours tj ON hs.type_jour_id = tj.id
+WHERE hs.employe_id = 1 -- ID de l'employé
+  AND DATE_TRUNC('month', hs.date) = DATE_TRUNC('month', '2024-11-01') -- Mois de novembre 2024
+  AND tj.type_label IN ('dimanche', 'ferie') -- Filtrer pour les jours spéciaux
+GROUP BY hs.employe_id, tj.type_label
+ORDER BY tj.type_label;
+
+
+
