@@ -62,11 +62,11 @@ switch ($page) {
     case 'detailOffre':
         include 'views/detailsOffre.php';
         break;
+    case 'fp':
+        include 'views/ficheDePaie.php';
+        break;
     case 'notifications':
         include 'views/notifications.php';
-        break;
-    case 'chat':
-        include 'views/chatbot.php';
         break;
     case 'quest':
         include 'views/quest.php';
