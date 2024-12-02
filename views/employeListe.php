@@ -55,6 +55,7 @@ include('header.php');
             <input type="hidden" name="idemp" value="<?= $offer['employe_id'] ?>">
             <td> <input type="submit" value="Licencier"></td>
         </form> 
+        <td><a href="index.php?page=fp&&id=<?=$offer['employe_id'] ?>&&date=2024-11">Voir fiche de paye</a></td>
        
     </tr>
         <?php endforeach; ?>

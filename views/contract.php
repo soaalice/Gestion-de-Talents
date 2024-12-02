@@ -41,7 +41,7 @@ include('header.php');
 <p>Employeur :  <?= htmlspecialchars($contract[0]['nom']) ?></p>
     <form action="index.php?page=contract" method="post">
         <input type="hidden" name="idcontrat" value="<?= $contract[0]['id'] ?>">
-        <input type="hidden" name="type" value="d">
+        <!-- <input type="hidden" name="type" value="d"> -->
         <input type="submit" value="Demissioner">
     </form>
     <?php }else{ ?>

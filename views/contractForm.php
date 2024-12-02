@@ -34,7 +34,7 @@ include('header.php');
         <input type="date" id="date_fin" name="date_fin"><br><br>
         
         <label for="date_fin">Salaire :</label>
-        <input type="date" id="salaire" name="salaire"><br><br>
+        <input type="number" id="salaire" name="salaire"><br><br>
 
         <button type="submit">Créer le Contrat</button>
     </form>

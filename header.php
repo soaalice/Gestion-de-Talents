@@ -69,7 +69,7 @@ header('Content-Type: text/html; charset=UTF-8');
 
 <?php
 if ($user->isAuthentified()) :
-    if ($role == 'Client') {
+    if ($role == 'client') {
         include('views/chat.php');
     }
 ?>

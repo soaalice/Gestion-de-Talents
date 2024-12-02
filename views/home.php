@@ -24,14 +24,14 @@ if ($user->isAuthentified()) {
         if (count($applications) > 0) {
             echo "<p class='text-center mt-3'><a href='index.php?page=candidateDashboard' class='btn btn-outline-success btn-lg highlight-btn'>My Applications & Available Offers</a></p>";
             echo "<p class='text-center mt-3'><a href='index.php?page=contract' class='btn btn-outline-success btn-lg highlight-btn'>My Contract</a></p>";
-            echo "<h3 class='mt-4' style='color: #3a6a40;'>Your Applications:</h3>";
-            echo "<ul class='list-group mt-3'>";
-            foreach ($applications as $application) {
-                echo "<li class='list-group-item d-flex justify-content-between align-items-center application-item'>";
-                echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . "</div>";
-                // echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
-                echo "</li>";
-            }
+            // echo "<h3 class='mt-4' style='color: #3a6a40;'>Your Applications:</h3>";
+            // echo "<ul class='list-group mt-3'>";
+            // foreach ($applications as $application) {
+            //     echo "<li class='list-group-item d-flex justify-content-between align-items-center application-item'>";
+            //     // echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . "</div>";
+            //     // // echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
+            //     // echo "</li>";
+            // }
             echo "</ul>";
         } else {
             echo "<p class='text-center'>You have not applied for any job yet.</p>";

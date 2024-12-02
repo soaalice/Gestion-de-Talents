@@ -8,6 +8,7 @@ try {
     $id = $_GET['id'] ?? null;
     $offers = $user->getAvailableOffers();
 
+
     // if (!$id) {
     //     throw new Exception("ID de l'offre manquant !");
     // }
@@ -18,6 +19,8 @@ try {
         $applicationDate = $_POST['application_date'];
         $personId = $_SESSION['user_id']; // L'ID de l'utilisateur connecté est supposé être dans la session
         $offre = $user->getOffreById($offerId);
+
+        var_dump($offre);
         $person = $user->getPersonById($personId);
         // if ($user->createApplication($offerId, $applicationDate, $personId)) {
         //     echo "<div class='alert alert-success text-center'>Application successfully submitted!</div>";
@@ -42,7 +45,7 @@ try {
             }
 
             // $offerId = $id;
-            $exigence = $offers[0]['exigence'] ?? '';
+            $exigence = $offre[0]['exigence'];
             if (empty($exigence)) {
                 throw new Exception("L'offre n'a pas d'exigence définie !");
             }
