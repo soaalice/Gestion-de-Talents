@@ -558,9 +558,35 @@ class User
         $stmt->bindParam(':idpersonne', $iddestinataire, PDO::PARAM_INT);
       return  $stmt->execute();
     }
+    public function getNiveauByCandidature($candidature_id) {
+    // Définir la requête SQL pour obtenir le niveau via l'ID de la candidature
+        $query = "
+            SELECT j.niveau 
+            FROM Candidature c
+            JOIN Offre o ON c.idOffre = o.id
+            JOIN Job j ON o.idjob = j.id
+            WHERE c.id = :candidature_id
+        ";
+
+        // Préparer la requête
+        $stmt = $this->db->prepare($query);
+
+        // Lier le paramètre
+        $stmt->bindParam(':candidature_id', $candidature_id, PDO::PARAM_INT);
+
+        // Exécuter la requête
+        $stmt->execute();
+
+        // Récupérer le résultat
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Retourner le niveau si trouvé, sinon retourner NULL
+        return $result ? $result['niveau'] : null;
+    }
+
     public function createContract($date_debut,$date_fin,$salaire,$candidature,$employe_id,$employeur_id){
-        $query = "INSERT INTO Contrat (date_debut, date_fin,salaire, statut_id,candidature_id, employe_id, employeur_id) 
-        VALUES (:date_debut, :date_fin,:salaire, :statut_id,:candidature, :employe_id, :employeur_id)";
+        $query = "INSERT INTO Contrat (date_debut, date_fin,salaire, statut_id,candidature_id, employe_id, employeur_id, niveau) 
+        VALUES (:date_debut, :date_fin,:salaire, :statut_id,:candidature, :employe_id, :employeur_id, :niveau)";
         $statut = Constante::id_actif();
         $stmt = $this->db->prepare($query);
         $stmt->bindParam(':date_debut', $date_debut);
@@ -570,6 +596,7 @@ class User
         $stmt->bindParam(':candidature',$candidature);
         $stmt->bindParam(':employe_id', $employe_id);
         $stmt->bindParam(':employeur_id', $employeur_id);
+        $stmt->bindParam(':niveau', $this->getNiveauByCandidature($candidature));
         $this->insertNotifs("Vous avez un nouveau contrat.",$employe_id);
        return $stmt->execute();
     }
@@ -630,7 +657,7 @@ class User
 
     public function getEmployes($id){
         $stmt = $this->db->prepare("
-        Select p.nom,c.id,c.employe_id from contrat c
+        Select p.nom,c.id,c.employe_id,c.niveau from contrat c
         left join personne p
         on p.id = c.employe_id
         where c.employeur_id = ?
