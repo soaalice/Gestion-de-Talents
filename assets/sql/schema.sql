@@ -24,7 +24,8 @@ CREATE TABLE Personne (
 -- Création de la table "Job"
 CREATE TABLE Job (
     id SERIAL PRIMARY KEY,      -- Identifiant unique pour chaque job
-    nom VARCHAR(255) NOT NULL   -- Nom du job
+    nom VARCHAR(255) NOT NULL,   -- Nom du job
+    niveau CHAR(2) NOT NULL
 );
 
 -- Création de la table "Offre"
@@ -152,7 +153,8 @@ CREATE TABLE Contrat (
     statut_id INT NOT NULL REFERENCES Statut(id),
     candidature_id INT NOT NULL REFERENCES candidature(id),
     employe_id INT NOT NULL REFERENCES personne(id), 
-    employeur_id INT NOT NULL REFERENCES personne(id)
+    employeur_id INT NOT NULL REFERENCES personne(id),
+    niveau CHAR(2)
 );
 
 -- Table: RuptureContrat
@@ -181,11 +183,6 @@ CREATE TABLE IndemnitePreavis (
     statut_paiement_id INT NOT NULL REFERENCES Statut_Paiement(id)
 );
 
--- Insérer les valeurs initiales dans les tables de référence
-INSERT INTO Statut (label) VALUES ('Actif'), ('Resilié');
-INSERT INTO Statut_Preavis (label) VALUES ('En cours'), ('Non respecter'), ('Terminer');
-INSERT INTO Statut_Paiement (label) VALUES ('En attente'), ('Régle');
-INSERT INTO Type_Rupture (label) VALUES ('Licenciement'), ('Demission');
 
 
 -- Heure sup
@@ -233,11 +230,6 @@ CREATE TABLE TypesJours (
     description VARCHAR(255) -- Description facultative
 );
 
-INSERT INTO TypesJours (type_label, description)
-VALUES 
-    ('dimanche', 'Jour travaillé le dimanche'),
-    ('ferie', 'Jour férié officiel'),
-    ('autre', 'Autres jours spéciaux non définis');
 
 CREATE TABLE HeuresSpeciales (
     id SERIAL PRIMARY KEY,
