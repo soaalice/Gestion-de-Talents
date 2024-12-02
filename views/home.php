@@ -1,44 +1,102 @@
 <?php
 include 'header.php';
+?>
+
+<?php
 if ($user->isAuthentified()) {
     $role = $user->getRole();
-    echo "<div class='container mt-5 mb-5'>";
-    echo "<div class='card shadow-lg p-4 mb-5' style='background-color: #f1f8f3;'>";
-    echo "<h1 class='display-2 text-center mt-5 mb-5 welcome-animation' style='color: #3a6a40;'>Welcome!</h1>";
-
+    
+    
     // Affichage de liens spécifiques selon le rôle de l'utilisateur
-
-    if (strtolower($role) === 'admin') {
+    
+    if (strtolower($role) === 'recruteur') {
+        echo "<div class='container mt-5 mb-5'>";
+        echo "<div class='card shadow-lg p-4 mb-5' style='background-color: #f1f8f3;'>";
+        echo "<h1 class='display-2 text-center mt-5 mb-5 welcome-animation' style='color: #3a6a40;'>Welcome!</h1>";
         echo "<div class='row mt-5'>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=offerForm' class='btn btn-warning btn-lg highlight-btn'>Create an Offer</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=recruiterDashboard' class='btn btn-success btn-lg highlight-btn'>My Offers & Applications</a></p></div>";
         echo "<div class='col-4'><p class='text-center'><a href='index.php?page=listeEmploye' class='btn btn-warning btn-lg highlight-btn'>My Employes</a></p></div>";
         // echo "<div class='col-4'><p class='text-center'><a href='index.php?page=requisOffreForm' class='btn btn-warning btn-lg highlight-btn'>Add Requirements to an Offer</a></p></div>";
         echo "</div>";
-    } elseif (strtolower($role) === 'client') {
-        echo "<p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-outline-success btn-lg highlight-btn'>Evaluation</a></p>";
-        echo "<p class='text-center'><a href='index.php?page=applicationForm' class='btn btn-outline-warning btn-lg highlight-btn'>Apply for an Offer</a></p>";
+        echo "</div>";
+    } elseif (strtolower($role) === 'postulant') {
+        echo "<div class='mb-5'>";
+        // echo "<p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-outline-success btn-lg highlight-btn'>Evaluation</a></p>";
+        // echo "<p class='text-center'><a href='index.php?page=applicationForm' class='btn btn-outline-warning btn-lg highlight-btn'>Apply for an Offer</a></p>";
+        ?>
+        <div id="landingPageCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+            <!-- Indicateurs -->
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#landingPageCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#landingPageCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#landingPageCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            </div>
 
-        $applications = $user->getUserApplicationsForProfile($_SESSION['user_id']);
+            <!-- Slides -->
+            <div class="carousel-inner">
+                <div class="carousel-item active" style="background-image: url('./assets/image/image-phone.jpg');">
+                    <div class="carousel-caption text-start">
+                        <h1>Bienvenue sur notre site</h1>
+                        <p>Découvrez nos services et solutions sur mesure.</p>
+                        <p class='text-center mt-3'><a href='index.php?page=quest' class='btn btn-success btn-lg highlight-btn'>Evaluation</a></p>
+                    </div>
+                </div>
+                <div class="carousel-item" style="background-image: url('./assets/image/image-phone.jpg');">
+                    <div class="carousel-caption text-center">
+                        <h1>Une expérience unique</h1>
+                        <p>Plongez dans un univers conçu pour vous.</p>
+                        <p class='text-center'><a href='index.php?page=applicationForm' class='btn btn-warning btn-lg highlight-btn'>Apply for an Offer</a></p>
+                    </div>
+                </div>
+                    <!-- <div class="carousel-item" style="background-image: url('./assets/image/image-phone.jpg');">
+                        <div class="carousel-caption text-end">
+                            <h1>Rejoignez-nous dès maintenant</h1>
+                            <p>Profitez d'offres exclusives et bien plus encore.</p>
+                            <p class='text-center mt-3'><a href='index.php?page=candidateDashboard' class='btn btn-outline-success btn-lg highlight-btn'>My Applications & Available Offers</a></p>
+                        </div>
+                    </div> -->
+                    <!-- <div class="carousel-item" style="background-image: url('./assets/image/image-phone.jpg');">
+                        <div class="carousel-caption text-end">
+                            <h1>Rejoignez-nous dès maintenant</h1>
+                            <p>Profitez d'offres exclusives et bien plus encore.</p>
+                            <p class='text-center mt-3'><a href='index.php?page=contract' class='btn btn-outline-success btn-lg highlight-btn'>My Contract</a></p>
+                        </div>
+                    </div> -->
+        </div>
 
-        if (count($applications) > 0) {
-            echo "<p class='text-center mt-3'><a href='index.php?page=candidateDashboard' class='btn btn-outline-success btn-lg highlight-btn'>My Applications & Available Offers</a></p>";
-            echo "<p class='text-center mt-3'><a href='index.php?page=contract' class='btn btn-outline-success btn-lg highlight-btn'>My Contract</a></p>";
-            echo "<h3 class='mt-4' style='color: #3a6a40;'>Your Applications:</h3>";
-            echo "<ul class='list-group mt-3'>";
-            foreach ($applications as $application) {
-                echo "<li class='list-group-item d-flex justify-content-between align-items-center application-item'>";
-                echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . "</div>";
-                // echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
-                echo "</li>";
-            }
-            echo "</ul>";
-        } else {
-            echo "<p class='text-center'>You have not applied for any job yet.</p>";
-        }
+            <!-- Contrôles de navigation -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#landingPageCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Précédent</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#landingPageCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Suivant</span>
+            </button>
+        </div>
+                <?php
+                $applications = $user->getUserApplicationsForProfile($_SESSION['user_id']);
+
+                if (count($applications) > 0) {
+                    echo "<p class='text-center mt-3'><a href='index.php?page=candidateDashboard' class='btn btn-outline-success btn-lg highlight-btn'>My Applications & Available Offers</a></p>";
+                    echo "<p class='text-center mt-3'><a href='index.php?page=contract' class='btn btn-outline-success btn-lg highlight-btn'>My Contract</a></p>";
+        
+                    echo "<h3 class='mt-4' style='color: #3a6a40;'>Your Applications:</h3>";
+                    echo "<ul class='list-group mt-3'>";
+                    foreach ($applications as $application) {
+                        echo "<li class='list-group-item d-flex justify-content-between align-items-center application-item'>";
+                        echo "<div class='job-info'>Job: " . htmlspecialchars($application['job_name']) . "</div>";
+                        // echo "<a href='index.php?page=profileForm&offer_id=" . $application['offer_id'] . "' class='btn btn-success text-decoration-none profile-btn'>Fill Your Profile</a>";
+                        echo "</li>";
+                    }
+                    echo "</ul>";
+                } else {
+                    echo "<p class='text-center'>You have not applied for any job yet.</p>";
+                }
 
     }
-    echo "</div>";
+
     echo "</div>";
 } else {
     echo "<div class='container mt-5 mb-5'>";
@@ -53,9 +111,21 @@ if ($user->isAuthentified()) {
     echo "</div>";
 }
 ?>
-
+<script type="module" src="./assets/js/bootstrap.min.js"></script>
+<script type="module" src="./assets/js/bootstrap.bundle.min.js"></script>
 <!-- CSS pour l'animation et le style -->
 <style>
+
+        .carousel-item {
+            height: 91vh    ; /* Pleine hauteur de l'écran */
+            background-size: cover;
+            background-position: center;
+        }
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.5); /* Fond semi-transparent pour le texte */
+            padding: 1rem;
+            border-radius: 8px;
+        }
     /* Animation pour le titre "Welcome!" */
     @keyframes fade-in-scale {
         0% {
@@ -92,7 +162,7 @@ if ($user->isAuthentified()) {
     .highlight-btn {
         transition: all 0.3s ease-in-out;
     }
-    .highlight-btn:hover {
+    .highlight-btn {
         transform: scale(1.05);
         box-shadow: 0 0 15px rgba(56, 189, 94, 0.5);
     }
